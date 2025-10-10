@@ -83,7 +83,7 @@ BruteForceResult brute_force_sequential(unsigned char* ciphertext,
     
     printf("\nIniciando búsqueda de fuerza bruta\n");
     printf("Bits de clave: %d\n", key_bits);
-    printf("Espacio de búsqueda: %llu claves\n", max_key + 1);
+    printf("Espacio de búsqueda: %lu claves\n", max_key + 1);
     
     clock_t start = clock();
     
@@ -102,10 +102,10 @@ BruteForceResult brute_force_sequential(unsigned char* ciphertext,
         }
         
         // Mostrar progreso cada millón de intentos
-        // if (key > 0 && key % 1000000 == 0) {
-        //     printf("Progreso: %llu claves probadas...\n", 
-        //            (unsigned long long)key);
-        // }
+        if (key > 0 && key % 1000000 == 0) {
+            printf("Progreso: %llu claves probadas...\n", 
+                   (unsigned long long)key);
+        }
     }
     
     clock_t end = clock();
@@ -122,8 +122,9 @@ void run_tests() {
     // Diferentes longitudes de clave a probar (en bits)
     int key_lengths[] = {8, 12, 16, 20, 24};
     int num_tests = sizeof(key_lengths) / sizeof(key_lengths[0]);
+    BruteForceResult allResults[num_tests];
     
-    printf("\nPRUEBA DE FUERZA BRUTA SECUENCIAL - DES\n");
+    printf("PRUEBA DE FUERZA BRUTA SECUENCIAL - DES\n");
     
     printf("\nTexto plano original: ");
     print_hex("", plaintext, 8);
@@ -148,6 +149,7 @@ void run_tests() {
         
         // Realizar ataque de fuerza bruta
         BruteForceResult result = brute_force_sequential(ciphertext, plaintext, bits);
+        allResults[i] = result;
         
         // Mostrar resultados
         printf("\nResultados\n");
@@ -178,6 +180,27 @@ void run_tests() {
         
         printf("\n");
     }
+    
+    // Tabla resumen
+    printf("╔════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║                            RESUMEN DE PRUEBAS                              ║\n");
+    printf("╠════════════╦═══════════════╦═══════════════╦══════════════════╦════════════╣\n");
+    printf("║ Bits Clave ║ Espacio Búsq. ║ Tiempo (seg)  ║ Claves/segundo   ║ Descifrado ║\n");
+    printf("╠════════════╬═══════════════╬═══════════════╬══════════════════╬════════════╣\n");
+    
+    for (int i = 0; i < num_tests; i++) {
+        int bits = key_lengths[i];
+        uint64_t space = (1ULL << bits);
+        
+        BruteForceResult result = allResults[i];
+
+        printf("║ %10d ║ %13lu ║ %13.6f ║ %16.2f ║ %10s ║\n", 
+               bits, space, result.time_elapsed, 
+               result.attempts / (result.time_elapsed > 0 ? result.time_elapsed : 1),
+                result.success == 1 ? "si": "no");
+    }
+    
+    printf("╚════════════╩═══════════════╩═══════════════╩══════════════════╩════════════╝\n");
 }
 
 // Función principal
