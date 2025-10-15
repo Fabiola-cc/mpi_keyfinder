@@ -2,5 +2,10 @@ sudo apt update
 sudo apt-get install libssl-dev
 sudo apt install libopenmpi-dev openmpi-bin libc6-dev //para bruteforce.c
 
+// Para bruteforce.c
+sudo apt-get install libssl-dev openmpi-bin libopenmpi-dev
+mpicc -o bruteforce bruteforce.c -lssl -lcrypto
+mpirun -np 6 ./bruteforce
+
 gcc -o sec_bruteforce secuencial_bruteforce.c -lssl -lcrypto -lm
 ./sec_bruteforce
