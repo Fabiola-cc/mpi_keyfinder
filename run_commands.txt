@@ -1,11 +1,24 @@
 sudo apt update
-sudo apt-get install libssl-dev
-sudo apt install libopenmpi-dev openmpi-bin libc6-dev //para bruteforce.c
 
-// Para bruteforce.c
+// Naive 
+--> secuencial (sec_bruteforce)
+sudo apt-get install libssl-dev
+gcc -o sec_bruteforce secuencial_bruteforce.c -lssl -lcrypto -lm
+./sec_bruteforce
+
+--> paralelo (bruteforce)
 sudo apt-get install libssl-dev openmpi-bin libopenmpi-dev
 mpicc -o bruteforce bruteforce.c -lssl -lcrypto
 mpirun -np 6 ./bruteforce
 
-gcc -o sec_bruteforce secuencial_bruteforce.c -lssl -lcrypto -lm
-./sec_bruteforce
+
+// Alternativa 1
+cd Alternative1
+
+--> secuencial (sec_bf_a1)
+gcc -O3 -march=native sec_bf_a1.c -o sec_a1 -lssl -lcrypto
+./sec_a1
+
+--> paralelo (bf_a1)
+mpicc -O3 -march=native bf_a1.c -o mpi_a1 -lssl -lcrypto
+mpirun -np 4 ./mpi_a1
