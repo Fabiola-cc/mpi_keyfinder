@@ -9,7 +9,16 @@ gcc -o sec_bruteforce secuencial_bruteforce.c -lssl -lcrypto -lm
 --> paralelo (bruteforce)
 sudo apt-get install libssl-dev openmpi-bin libopenmpi-dev
 mpicc -o bruteforce bruteforce.c -lssl -lcrypto
-mpirun -np 6 ./bruteforce
+
+// Cypher
+mpirun -np 1 ./bruteforce -e "Hello the world" -k 123456
+
+// Decypher
+mpirun -np 1 ./bruteforce -d "6a513c2a69a9513447566d10c6a70e10" -k 123456
+
+// bruteforce
+mpirun -np 4 ./des_cipher -b "6a513c2a69a9513447566d10c6a70e10"
+// El 4 es la cantidad de procesos a utilizar
 
 
 // Alternativa 1
