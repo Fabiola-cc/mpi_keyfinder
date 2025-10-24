@@ -26,8 +26,8 @@ cd Alternative1
 
 --> secuencial (sec_bf_a1)
 gcc -O3 -march=native sec_bf_a1.c -o sec_a1 -lssl -lcrypto
-./sec_a1
+./sec_a1 -k 123456L -s "es una prueba de" -f input.txt
 
 --> paralelo (bf_a1)
 mpicc -O3 -march=native bf_a1.c -o mpi_a1 -lssl -lcrypto
-mpirun -np 4 ./mpi_a1
+mpirun -np 4 ./mpi_a1 -k 123456L -s "es una prueba de" -f input.txt

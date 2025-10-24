@@ -6,10 +6,10 @@
 #include <time.h>
 
 #define MAX_TEXT 4096
-#define SEARCH_WORD " the "
+#define CHECK_INTERVAL 10000  // Revisar cada N iteraciones
 
-// Buffer estático para evitar allocaciones repetidas
-static unsigned char temp_buffer[MAX_TEXT];
+// Buffer estático
+static unsigned char temp_buffer_global[MAX_TEXT];
 
 void decrypt(long key, unsigned char *ciph, int len) {
     DES_cblock keyblock;
@@ -70,7 +70,7 @@ int quickCheckFirstBlock(long key, unsigned char *ciph) {
     DES_set_odd_parity(&keyblock);
     DES_set_key_unchecked(&keyblock, &schedule);
     
-    // Solo descifrar primer bloque
+// Solo descifrar primer bloque
     memcpy(first_block, ciph, 8);
     DES_ecb_encrypt((DES_cblock *)first_block,
                     (DES_cblock *)first_block,
@@ -81,13 +81,12 @@ int quickCheckFirstBlock(long key, unsigned char *ciph) {
     return isLikelyPlaintext(first_block, 8);
 }
 
-int tryKey(long key, unsigned char *ciph, int len) {
-    // Primero: quick check del primer bloque
+int tryKey(long key, unsigned char *ciph, int len, unsigned char *temp_buffer, const char *search_word) {
+    // Quick check
     if (!quickCheckFirstBlock(key, ciph)) {
-        return 0; // Descarta inmediatamente si no parece texto
+        return 0; // Descarta
     }
     
-    // Si pasa el quick check, descifrar todo usando buffer estático
     DES_cblock keyblock;
     DES_key_schedule schedule;
     
@@ -95,7 +94,7 @@ int tryKey(long key, unsigned char *ciph, int len) {
     DES_set_odd_parity(&keyblock);
     DES_set_key_unchecked(&keyblock, &schedule);
     
-    // Copiar solo una vez al buffer estático
+    // Copiar al buffer local (se asume len <= MAX_TEXT)
     memcpy(temp_buffer, ciph, len);
     
     for (int i = 0; i < len; i += 8) {
@@ -106,80 +105,146 @@ int tryKey(long key, unsigned char *ciph, int len) {
     }
     
     temp_buffer[len] = 0;
-    
+
     // Buscar palabra clave
-    return strstr((char *)temp_buffer, SEARCH_WORD) != NULL;
+    return strstr((char *)temp_buffer, search_word) != NULL;
 }
 
 int main(int argc, char *argv[]) {
-    unsigned char buffer[MAX_TEXT];
-    int ciphlen = 0;
+    int N = 1;         // procesos (secuencial)
+    int id = 0;        // id del proceso (secuencial)
     long found = 0;
+    double start_time, end_time;
+
+    // Parámetros configurables
+    long known_key = 123456L;
+    char search_word[256] = "";
+    char input_file[256] = "input.txt";
     
-    // Leer archivo
-    FILE *f = fopen("input.txt", "r");
-    if (!f) {
-        fprintf(stderr, "Error: no se pudo abrir input.txt\n");
+    // Parámetros automáticos del sistema
+    int check_interval = CHECK_INTERVAL;
+
+    // Parseo de argumentos (solo por id==0 en tu versión original)
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-k") == 0 && i + 1 < argc) { // Llave de cifrado
+            known_key = atol(argv[++i]);
+            if (known_key <= 0) {
+                fprintf(stderr, "Error: La clave debe ser un número positivo\n");
+                return 1;
+            }
+        } else if (strcmp(argv[i], "-s") == 0 && i + 1 < argc) { // Palabra clave
+            strncpy(search_word, argv[++i], sizeof(search_word) - 1);
+            if (strlen(search_word) == 0) {
+                fprintf(stderr, "Error: La palabra de búsqueda no puede estar vacía\n");
+                return 1;
+            }
+        } else if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) { // Archivo
+            strncpy(input_file, argv[++i], sizeof(input_file) - 1);
+        }
+    }
+
+    if (strlen(search_word) == 0) {
+        fprintf(stderr, "Error: Debe proporcionar palabra de búsqueda con -s\n\n");
         return 1;
     }
-    
+
+    if (N >= 8) {
+        check_interval = 5000;
+    } else if (N >= 4) {
+        check_interval = 10000;
+    } else {
+        check_interval = 20000;
+    }
+
+    unsigned char buffer[MAX_TEXT];
+    int ciphlen = 0;
+
+    // Leer archivo y cifrar
+    FILE *f = fopen(input_file, "r");
+    if (!f) {
+        fprintf(stderr, "Error: no se pudo abrir %s\n", input_file);
+        return 1;
+    }
     ciphlen = fread(buffer, 1, MAX_TEXT, f);
     fclose(f);
-    
+
     // Ajustar tamaño a múltiplo de 8
     if (ciphlen % 8 != 0)
         ciphlen += (8 - (ciphlen % 8));
-    
-    // Cifrar con clave conocida
-    long known_key = 1234567L;
+
+    // Cifrar con clave dada por el usuario
     encrypt(known_key, buffer, ciphlen);
-    printf("Texto cifrado con clave: %ld\n", known_key);
-    printf("Tamaño del texto: %d bytes\n", ciphlen);
-    
-    // Búsqueda de fuerza bruta
-    long upper = (1L << 24);  // 2^24 para prueba
-    printf("Buscando clave en rango [0, %ld]...\n\n", upper);
-    
-    clock_t start = clock();
+
+    printf("DES BRUTE FORCE SECUENCIAL\n");
+    printf("Clave usada para cifrar: %-30ld\n", known_key);
+    printf("Palabra de búsqueda: \"%-33s\"\n", search_word);
+    printf("Archivo de entrada: %-35s\n", input_file);
+
+    // Calcular rango centrado en la clave
+    uint64_t KEYSPACE = 1ULL << 56; // 2^56
+    long upper = (long) KEYSPACE;
+    long range_per_node = upper / N;
+    long mylower = range_per_node * id;
+    long myupper = (id == N - 1) ? upper : range_per_node * (id + 1);
+
+    printf("Rango de búsqueda total: %ld\n", upper);
+    printf("Iniciando búsqueda...\n\n");
+
+    printf("Proceso %d: rango [%ld, %ld] - %ld claves\n", 
+           id, mylower, myupper, myupper - mylower);
+
+    // Sincronización no necesaria en secuencial
+    start_time = (double)clock() / CLOCKS_PER_SEC;
+
     long keys_tested = 0;
-    
-    for (long key = 0; key < upper && !found; key++) {
+    long last_report = mylower;
+    unsigned char temp_buffer[MAX_TEXT];
+
+    for (long key = mylower; key < myupper && found == 0; key++) {
         keys_tested++;
-        
-        if (tryKey(key, buffer, ciphlen)) {
+
+        if (tryKey(key, buffer, ciphlen, temp_buffer, search_word)) {
             found = key;
             printf("¡Clave encontrada: %ld!\n", key);
             break;
         }
         
-        // Progreso cada 100k claves
-        if (key > 0 && key % 100000 == 0) {
-            double elapsed = (double)(clock() - start) / CLOCKS_PER_SEC;
-            double rate = keys_tested / elapsed;
-            double percent = (key * 100.0) / upper;
-            printf("Progreso: %.2f%% - %ld claves probadas - %.0f claves/seg\n", 
-                   percent, keys_tested, rate);
+        if (keys_tested % check_interval == 0) {
+            // Reporte de progreso cada 500k claves (aprox)
+            if ((key - last_report) >= 500000) {
+                double elapsed = (double)clock() / CLOCKS_PER_SEC - start_time;
+                long total_keys = (key - mylower) * N; // aproximado
+                double rate = (elapsed > 0.0) ? total_keys / elapsed : 0.0;
+                double percent = ((double)key * 100.0) / (double)upper;
+                printf("Progreso: %.2f%% - %.0f claves/seg (%.2f segundos)\n", 
+                       percent, rate, elapsed);
+                last_report = key;
+            }
         }
     }
-    
-    clock_t end = clock();
-    double total_time = (double)(end - start) / CLOCKS_PER_SEC;
-    
-    if (found) {
-        printf("\nRESULTADO: \n");
+
+    end_time = (double)clock() / CLOCKS_PER_SEC;
+
+    long total_keys_tested = keys_tested;
+
+    printf("\nRESULTADOS \n");
+    double total_time = end_time - start_time;
+    if (found != 0) {
         printf("Clave encontrada: %ld\n", found);
-        printf("Claves probadas: %ld\n", keys_tested);
+        printf("Total de claves probadas: %ld\n", total_keys_tested);
         printf("Tiempo total: %.2f segundos\n", total_time);
-        printf("Velocidad: %.0f claves/segundo\n", keys_tested / total_time);
+        printf("Velocidad: %.0f claves/segundo\n", (total_time > 0.0) ? (total_keys_tested / total_time) : 0.0);
+        printf("Speedup con %d procesos: %.2fx\n", N, 
+               (total_keys_tested / total_time) / ((total_keys_tested / (total_time * N))));
         
         // Descifrar y mostrar
         decrypt(found, buffer, ciphlen);
         buffer[ciphlen] = 0;
         printf("\nTexto descifrado:\n%s\n", buffer);
     } else {
-        printf("\nNo se encontró la clave en el rango especificado.\n");
+        printf("No se encontró la clave en el rango especificado.\n");
         printf("Tiempo total: %.2f segundos\n", total_time);
     }
-    
+
     return 0;
 }
