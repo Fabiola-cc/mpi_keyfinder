@@ -1,10 +1,8 @@
 //bruteforce.c
-//Versión mejorada: puede encriptar, desencriptar o hacer bruteforce
+//Versión mejorada: puede encriptar, desencriptar
 //Compilar: mpicc -o des_cipher bruteforce.c -lssl -lcrypto
 //Uso: 
-//  Encriptar:   mpirun -np 1 ./des_cipher -e "mensaje" -k 123456
-//  Desencriptar: mpirun -np 1 ./des_cipher -d "cipher_hex" -k 123456
-//  Bruteforce:  mpirun -np 4 ./des_cipher -b "cipher_hex"
+
 
 #include <string.h>
 #include <stdio.h>
@@ -121,67 +119,10 @@ void do_decrypt(const char *cipher_hex, long key){
   free(temp);
 }
 
-void do_bruteforce(const char *cipher_hex, int N, int id){
-  unsigned char cipher[1024];
-  int ciphlen = hex_to_bytes(cipher_hex, cipher);
-  
-  if(ciphlen < 0){
-    if(id == 0) printf("Error: formato hexadecimal inválido\n");
-    return;
-  }
-  
-  long upper = (1L << 56);
-  long range_per_node = upper / N;
-  long mylower = range_per_node * id;
-  long myupper = range_per_node * (id+1) - 1;
-  
-  if(id == N-1){
-    myupper = upper;
-  }
-  
-  long found = 0;
-  MPI_Request req;
-  MPI_Status st;
-  
-  MPI_Irecv(&found, 1, MPI_LONG, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &req);
-  
-  if(id == 0){
-    printf("Iniciando bruteforce con %d procesos...\n", N);
-    printf("Buscando patrón: '%s'\n", search);
-  }
-  
-  for(long i = mylower; i < myupper && (found == 0); ++i){
-    if(i % 1000000 == 0 && id == 0){
-      printf("Progreso: %ld / %ld (%.2f%%)\r", i, upper, (i*100.0)/upper);
-      fflush(stdout);
-    }
-    
-    if(tryKey(i, (char *)cipher, ciphlen)){
-      found = i;
-      for(int node=0; node<N; node++){
-        MPI_Send(&found, 1, MPI_LONG, node, 0, MPI_COMM_WORLD);
-      }
-      break;
-    }
-  }
-  
-  if(id == 0){
-    MPI_Wait(&req, &st);
-    char *temp = malloc(ciphlen + 1);
-    memcpy(temp, cipher, ciphlen);
-    temp[ciphlen] = 0;
-    decrypt(found, temp, ciphlen);
-    printf("\n¡Key encontrada! %ld\n", found);
-    printf("Mensaje: %s\n", temp);
-    free(temp);
-  }
-}
-
 void print_usage(const char *prog){
   printf("Uso:\n");
   printf("  Encriptar:    mpirun -np 1 %s -e \"mensaje\" -k KEY\n", prog);
   printf("  Desencriptar: mpirun -np 1 %s -d \"cipher_hex\" -k KEY\n", prog);
-  printf("  Bruteforce:   mpirun -np N %s -b \"cipher_hex\"\n", prog);
   printf("\nEjemplos:\n");
   printf("  %s -e \"Hello the world\" -k 123456\n", prog);
   printf("  %s -d \"6cf5413f7dc89642\" -k 123456\n", prog);
@@ -215,12 +156,6 @@ int main(int argc, char *argv[]){
       long key = atol(argv[4]);
       do_decrypt(argv[2], key);
     }
-  }
-  else if(mode == 'b' && argc == 3){
-    do_bruteforce(argv[2], N, id);
-  }
-  else{
-    if(id == 0) print_usage(argv[0]);
   }
   
   MPI_Finalize();

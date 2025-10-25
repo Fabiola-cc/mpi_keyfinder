@@ -17,7 +17,7 @@ mpirun -np 1 ./bruteforce -e "Hello the world" -k 123456
 mpirun -np 1 ./bruteforce -d "6a513c2a69a9513447566d10c6a70e10" -k 123456
 
 // bruteforce
-mpirun -np 4 ./des_cipher -b "6a513c2a69a9513447566d10c6a70e10"
+mpirun -np 4 ./bruteforce -b "6a513c2a69a9513447566d10c6a70e10"
 // El 4 es la cantidad de procesos a utilizar
 
 
