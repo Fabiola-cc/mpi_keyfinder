@@ -181,8 +181,7 @@ int main(int argc, char *argv[]) {
     printf("Archivo de entrada: %-35s\n", input_file);
 
     // Calcular rango centrado en la clave
-    uint64_t KEYSPACE = 1ULL << 56; // 2^56
-    long upper = (long) KEYSPACE;
+    uint64_t upper = 1ULL << 56; // 2^56
     long range_per_node = upper / N;
     long mylower = range_per_node * id;
     long myupper = (id == N - 1) ? upper : range_per_node * (id + 1);

@@ -198,8 +198,7 @@ int main(int argc, char *argv[]) {
     MPI_Bcast(buffer, ciphlen, MPI_UNSIGNED_CHAR, 0, comm);
 
     // Calcular rango centrado en la clave (para claves grandes)
-    uint64_t KEYSPACE = 1ULL << 56; // 2^56
-    long upper = (long) KEYSPACE;
+    uint64_t upper = 1ULL << 56; // 2^56
     long range_per_node = upper / N;
     long mylower = range_per_node * id;
     long myupper = (id == N - 1) ? upper : range_per_node * (id + 1);
