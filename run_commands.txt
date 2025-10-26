@@ -26,8 +26,13 @@ cd Alternative1
 
 --> secuencial (sec_bf_a1)
 gcc -O3 -march=native sec_bf_a1.c -o sec_a1 -lssl -lcrypto
-./sec_a1 -k 123456L -s "es una prueba de" -f input.txt
+./sec_a1 -k 123456L -s "later found by" -f input.txt
 
 --> paralelo (bf_a1)
 mpicc -O3 -march=native bf_a1.c -o mpi_a1 -lssl -lcrypto
-mpirun -np 4 ./mpi_a1 -k 123456L -s "es una prueba de" -f input.txt
+mpirun -np 4 ./mpi_a1 -k 18014398509481984L -s "later found by" -f input.txt
+
+--> paralelo con OpenMP (bf_a1_omp)
+mpicc -O3 -march=native -fopenmp bf_a1_omp.c -o omp_a1 -lssl -lcrypto
+mpirun -np 4 ./omp_a1 -k 9007199254740992L -s "later found by" -f input.txt
+mpirun -np 4 ./omp_a1 -k 2251799813685248L -s "later found by" -f input.txt
