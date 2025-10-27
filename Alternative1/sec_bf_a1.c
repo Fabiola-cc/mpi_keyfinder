@@ -60,44 +60,33 @@ int isLikelyPlaintext(unsigned char *data, int len) {
     return (printable * 100 / check_len) > 90;
 }
 
-// Descifra solo el primer bloque para filtrado rápido
-int quickCheckFirstBlock(long key, unsigned char *ciph) {
+int tryKey(long key, unsigned char *ciph, int len, 
+                    unsigned char *temp_buffer, const char *search_word) {
     DES_cblock keyblock;
     DES_key_schedule schedule;
     unsigned char first_block[8];
     
+    // Setup key UNA SOLA VEZ
     memcpy(&keyblock, &key, 8);
     DES_set_odd_parity(&keyblock);
     DES_set_key_unchecked(&keyblock, &schedule);
     
-// Solo descifrar primer bloque
+    // Quick check del primer bloque
     memcpy(first_block, ciph, 8);
     DES_ecb_encrypt((DES_cblock *)first_block,
                     (DES_cblock *)first_block,
                     &schedule,
                     DES_DECRYPT);
     
-    // Verificar si parece texto válido
-    return isLikelyPlaintext(first_block, 8);
-}
-
-int tryKey(long key, unsigned char *ciph, int len, unsigned char *temp_buffer, const char *search_word) {
-    // Quick check
-    if (!quickCheckFirstBlock(key, ciph)) {
-        return 0; // Descarta
+    if (!isLikelyPlaintext(first_block, 8)) {
+        return 0;  // Descarta sin descifrar todo
     }
     
-    DES_cblock keyblock;
-    DES_key_schedule schedule;
-    
-    memcpy(&keyblock, &key, 8);
-    DES_set_odd_parity(&keyblock);
-    DES_set_key_unchecked(&keyblock, &schedule);
-    
-    // Copiar al buffer local (se asume len <= MAX_TEXT)
+    // Si pasa, descifrar el resto (reutilizando schedule)
     memcpy(temp_buffer, ciph, len);
+    memcpy(temp_buffer, first_block, 8);  // Ya tenemos el primer bloque
     
-    for (int i = 0; i < len; i += 8) {
+    for (int i = 8; i < len; i += 8) {  // Empezar desde bloque 2
         DES_ecb_encrypt((DES_cblock *)(temp_buffer + i),
                         (DES_cblock *)(temp_buffer + i),
                         &schedule,
@@ -105,8 +94,6 @@ int tryKey(long key, unsigned char *ciph, int len, unsigned char *temp_buffer, c
     }
     
     temp_buffer[len] = 0;
-
-    // Buscar palabra clave
     return strstr((char *)temp_buffer, search_word) != NULL;
 }
 
