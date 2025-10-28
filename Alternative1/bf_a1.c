@@ -237,11 +237,15 @@ int main(int argc, char *argv[]) {
             // Reporte de progreso cada 500k claves
             if (id == 0 && (key - last_report) >= 500000) {
                 double elapsed = MPI_Wtime() - start_time;
-                long total_keys = (key - mylower) * N; // Aproximado
+                long my_total_keys = (key - mylower);
+                long total_keys = my_total_keys * N; // Aproximado
+
+                double rate_process = my_total_keys / elapsed;
                 double rate = total_keys / elapsed;
                 double percent = (key * 100.0) / upper;
-                printf("Progreso: %.2f%% - %.0f claves/seg (%.2f segundos)\n", 
-                       percent, rate, elapsed);
+
+                printf("(%.2f segundos) Proceso 0: %.0f claves/seg | En total: ~%.0f claves/seg\n", 
+                        elapsed, rate_process, rate);
                 last_report = key;
             }
         }

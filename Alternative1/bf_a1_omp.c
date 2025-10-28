@@ -261,6 +261,9 @@ int main(int argc, char *argv[]) {
                     
                     // Claves probadas por este thread hasta ahora
                     long my_keys_so_far = key - my_start;
+
+                    // Claves probadas por este thread hasta ahora
+                    long rate_process = my_keys_so_far / elapsed;
                     
                     // ESTIMACIÓN: todos los threads avanzan similar
                     long all_threads_keys = my_keys_so_far * num_threads_local;
@@ -269,10 +272,9 @@ int main(int argc, char *argv[]) {
                     long total_keys_estimate = all_threads_keys * N;
                     
                     double rate = total_keys_estimate / elapsed;
-                    double percent = ((double)my_keys_so_far * 100.0) / (my_end - my_start);
                     
-                    printf("\n[Estimación] %.4f%% | ~%ld claves totales | %.0f claves/seg (%.2f segundos)\n", 
-                        percent, total_keys_estimate, rate, elapsed);
+                    printf("(%.2f segundos) Proceso 0: %ld claves/seg | En total: ~%.0f claves/seg\n", 
+                        elapsed, rate_process, rate);
                     last_report = key;
                 }
             }
