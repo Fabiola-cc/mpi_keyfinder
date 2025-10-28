@@ -36,3 +36,18 @@ mpirun -np 4 ./mpi_a1 -k 18014398509481984L -s "later found by" -f input.txt
 mpicc -O3 -march=native -fopenmp bf_a1_omp.c -o omp_a1 -lssl -lcrypto
 mpirun -np 4 ./omp_a1 -k 9007199254740992L -s "later found by" -f input.txt
 mpirun -np 4 ./omp_a1 -k 2251799813685248L -s "later found by" -f input.txt
+
+ALTERNATIVA 2
+
+SECUENCIAL
+#k -> key
+#h -> hint
+#r -> radio
+
+mpicc -o sec_a2 sec_bf_a2.c -lssl -lcrypto -O3
+mpirun -np 1 sec_a2 -k 18014398509481984L -h 120000 -r 10000 -s "secret"
+
+PARALELO
+
+mpicc -o mpi_a2 bf_a2.c -lssl -lcrypto -O3
+mpirun -np 4 ./programa -k 123456 -h 120000 -r 10000 -s "secret"
