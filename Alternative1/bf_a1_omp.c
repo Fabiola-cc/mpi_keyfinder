@@ -254,6 +254,27 @@ int main(int argc, char *argv[]) {
                     printf("Proceso %d: clave encontrada por otro proceso\n", id);
                     break;
                 }
+
+                // Reporte de progreso detallado (solo proceso 0, thread 0)
+                if (id == 0 && thread_id == 0 && (key - last_report) >= 500000) {
+                    double elapsed = MPI_Wtime() - start_time;
+                    
+                    // Claves probadas por este thread hasta ahora
+                    long my_keys_so_far = key - my_start;
+                    
+                    // ESTIMACIÓN: todos los threads avanzan similar
+                    long all_threads_keys = my_keys_so_far * num_threads_local;
+                    
+                    // ESTIMACIÓN: todos los procesos avanzan similar
+                    long total_keys_estimate = all_threads_keys * N;
+                    
+                    double rate = total_keys_estimate / elapsed;
+                    double percent = ((double)my_keys_so_far * 100.0) / (my_end - my_start);
+                    
+                    printf("\n[Estimación] %.4f%% | ~%ld claves totales | %.0f claves/seg (%.2f segundos)\n", 
+                        percent, total_keys_estimate, rate, elapsed);
+                    last_report = key;
+                }
             }
         }
         
