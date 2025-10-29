@@ -30,8 +30,7 @@ void print_hex(const char* label, unsigned char* data, int len) {
 }
 
 // Función para cifrar con DES (múltiples bloques)
-void des_encrypt(unsigned char* plaintext, unsigned char* ciphertext, 
-                 uint64_t key_value, int len) {
+void des_encrypt(unsigned char* ciphertext, uint64_t key_value, int len) {
     DES_cblock key;
     DES_key_schedule schedule;
     
@@ -48,7 +47,7 @@ void des_encrypt(unsigned char* plaintext, unsigned char* ciphertext,
     
     // Cifrar todos los bloques de 8 bytes
     for (int i = 0; i < len; i += 8) {
-        DES_ecb_encrypt((DES_cblock*)(plaintext + i), 
+        DES_ecb_encrypt((DES_cblock*)(ciphertext + i), 
                         (DES_cblock*)(ciphertext + i), 
                         &schedule, DES_ENCRYPT);
     }
@@ -82,14 +81,14 @@ void des_decrypt(unsigned char* ciphertext, unsigned char* decrypted,
 // Función de fuerza bruta secuencial con timeout y búsqueda por palabra clave
 BruteForceResult brute_force_sequential(unsigned char* ciphertext, 
                                         const char* search_word,
-                                        uint64_t max_key, 
                                         int ciphertext_len,
                                         double timeout_seconds) {
     BruteForceResult result = {0, 0.0, 0, 0};
+    uint64_t max_key = 1L << 24; // Espacio pequeño para pruebas secuenciales
     unsigned char* decrypted = (unsigned char*)malloc(ciphertext_len + 1);
     
     printf("\nIniciando búsqueda de fuerza bruta\n");
-    printf("Palabra clave a buscar: \"%s\"\n", search_word);
+    printf("Frase clave a buscar: \"%s\"\n", search_word);
     printf("Espacio de búsqueda: hasta %llu claves\n", (unsigned long long)(max_key + 1));
     printf("Timeout configurado: %.0f segundos (%.2f minutos)\n", 
            timeout_seconds, timeout_seconds / 60.0);
@@ -144,22 +143,73 @@ BruteForceResult brute_force_sequential(unsigned char* ciphertext,
     return result;
 }
 
+// Función para ejecutar segun parametros
+void run_normal_execution(unsigned char* buffer, int ciphlen, char* search_word, long original_key) {
+    // TIMEOUT EN SEGUNDOS - Ajusta este valor según necesites
+    double timeout_seconds = 60.0;  // 1 minuto por defecto
+    
+    printf("ATAQUE DE FUERZA BRUTA SECUENCIAL AL ALGORITMO DES\n");
+    printf("\nTEXTO A CIFRAR:\n\"%s\"\n", buffer);
+    printf("\nLongitud del texto (incluye padding si fue necesario): %d bytes\n", ciphlen);
+    printf("Frase clave a buscar: \"%s\"\n", search_word);
+    printf("TIMEOUT: %.0f segundos (%.2f minutos) por prueba\n\n", 
+           timeout_seconds, timeout_seconds / 60.0);
+        
+    printf("Clave recibida: ");
+    print_key(original_key);
+    printf(" (decimal: %llu)\n", (unsigned long long)original_key);
+
+    // Cifrar texto
+    des_encrypt(buffer, original_key, ciphlen);
+    printf("Texto cifrado (primeros 32 bytes): ");
+    for (int j = 0; j < (ciphlen < 32 ? ciphlen : 32); j++) {
+        printf("%02X", buffer[j]);
+    }
+    if (ciphlen > 32) printf("...");
+    printf("\n");
+        
+    // Realizar ataque de fuerza bruta CON TIMEOUT
+    BruteForceResult result = brute_force_sequential(buffer, search_word, ciphlen, timeout_seconds);
+        
+    // Mostrar resultados
+    printf("\n RESULTADO \n");
+    if (result.success) {
+        printf("✓ Clave encontrada: ");
+        print_key(result.key_found);
+        printf(" (decimal: %llu)\n", (unsigned long long)result.key_found);
+        
+        // Verificar que sea correcta
+        unsigned char* verify = (unsigned char*)calloc(ciphlen + 1, 1);
+        des_decrypt(buffer, verify, result.key_found, ciphlen);
+        verify[ciphlen] = '\0';
+        
+        printf("Texto descifrado:\n\"%s\"\n", verify);
+        
+        if (strstr((char*)verify, search_word) != NULL) {
+            printf("✓ Verificación exitosa: texto contiene \"%s\"\n", search_word);
+        }
+        free(verify);
+    } else {
+        printf("✗ Clave no encontrada (timeout o rango agotado)\n");
+    }
+    
+    printf("Intentos realizados: %llu\n", result.attempts);
+    printf("Tiempo transcurrido: %.6f segundos (%.2f minutos)\n", 
+            result.time_elapsed, result.time_elapsed / 60.0);
+    
+    if (result.time_elapsed > 0) {
+        printf("Velocidad: %.2f claves/segundo\n", 
+                result.attempts / result.time_elapsed);
+    }
+    
+    printf("\n");
+    
+    printf("\nNota: Timeout configurado en %.0f segundos (%.2f minutos) por prueba\n", 
+           timeout_seconds, timeout_seconds / 60.0);
+}
+
 // Función para ejecutar pruebas con claves específicas
-void run_tests() {
-    // Texto largo (se ajustará a múltiplo de 8)
-    const char* text_str = "Esta es una prueba de proyecto 2";
-    int text_len = strlen(text_str);
-    
-    // Ajustar a múltiplo de 8 bytes
-    int padded_len = ((text_len + 7) / 8) * 8;
-    
-    unsigned char* plaintext = (unsigned char*)calloc(padded_len + 1, 1);
-    unsigned char* ciphertext = (unsigned char*)calloc(padded_len + 1, 1);
-    strcpy((char*)plaintext, text_str);
-    
-    // Palabra clave a buscar
-    const char* search_word = "es una prueba de";
-    
+void run_tests(unsigned char buffer[], int ciphlen, char search_word[]) {
     // TIMEOUT EN SEGUNDOS - Ajusta este valor según necesites
     double timeout_seconds = 60.0;  // 1 minuto por defecto
     
@@ -173,65 +223,57 @@ void run_tests() {
     
     const char* key_names[] = {
         "Extra",
-        "Fácil",
+        "Facil",
         "Media",
-        "Difícil"
+        "Dificil"
     };
     
     int num_tests = sizeof(test_keys) / sizeof(test_keys[0]);
     BruteForceResult allResults[num_tests];
     
-    printf("╔═══════════════════════════════════════════════════════════════╗\n");
-    printf("║  ATAQUE DE FUERZA BRUTA SECUENCIAL AL ALGORITMO DES          ║\n");
-    printf("╚═══════════════════════════════════════════════════════════════╝\n");
-    printf("\nTEXTO A CIFRAR:\n\"%s\"\n", text_str);
-    printf("\nLongitud original: %d bytes\n", text_len);
-    printf("Longitud con padding: %d bytes (%d bloques DES)\n", padded_len, padded_len/8);
+    printf("ATAQUE DE FUERZA BRUTA SECUENCIAL AL ALGORITMO DES\n");
+    printf("\nTEXTO A CIFRAR:\n\"%s\"\n", buffer);
+    printf("\nLongitud del texto (incluye padding si fue necesario): %d bytes\n", ciphlen);
     printf("Palabra clave a buscar: \"%s\"\n", search_word);
     printf("TIMEOUT: %.0f segundos (%.2f minutos) por prueba\n\n", 
            timeout_seconds, timeout_seconds / 60.0);
     
     // Resultados de todas las pruebas
     printf("EJECUTANDO PRUEBAS...\n");
-    printf("===========================================\n");
     
     for (int i = 0; i < num_tests; i++) {
         uint64_t original_key = test_keys[i];
         
-        printf("\n╔════════════════════════════════════════════════════════════╗\n");
-        printf("║ Prueba %d: Clave %s\n", i + 1, key_names[i]);
-        printf("╚════════════════════════════════════════════════════════════╝\n");
+        printf("Prueba %d: Clave %s\n", i + 1, key_names[i]);
         
         printf("Clave original: ");
         print_key(original_key);
         printf(" (decimal: %llu)\n", (unsigned long long)original_key);
-        
+
         // Cifrar con la clave original
-        des_encrypt(plaintext, ciphertext, original_key, padded_len);
+        des_encrypt(buffer, original_key, ciphlen);
         printf("Texto cifrado (primeros 32 bytes): ");
-        for (int j = 0; j < (padded_len < 32 ? padded_len : 32); j++) {
-            printf("%02X", ciphertext[j]);
+        for (int j = 0; j < (ciphlen < 32 ? ciphlen : 32); j++) {
+            printf("%02X", buffer[j]);
         }
-        if (padded_len > 32) printf("...");
+        if (ciphlen > 32) printf("...");
         printf("\n");
         
         // Realizar ataque de fuerza bruta CON TIMEOUT
-        BruteForceResult result = brute_force_sequential(ciphertext, search_word,
-                                                         original_key, padded_len, 
-                                                         timeout_seconds);
+        BruteForceResult result = brute_force_sequential(buffer, search_word, ciphlen, timeout_seconds);
         allResults[i] = result;
         
         // Mostrar resultados
-        printf("\n--- RESULTADOS ---\n");
+        printf("\n RESULTADOS \n");
         if (result.success) {
             printf("✓ Clave encontrada: ");
             print_key(result.key_found);
             printf(" (decimal: %llu)\n", (unsigned long long)result.key_found);
             
             // Verificar que sea correcta
-            unsigned char* verify = (unsigned char*)calloc(padded_len + 1, 1);
-            des_decrypt(ciphertext, verify, result.key_found, padded_len);
-            verify[padded_len] = '\0';
+            unsigned char* verify = (unsigned char*)calloc(ciphlen + 1, 1);
+            des_decrypt(buffer, verify, result.key_found, ciphlen);
+            verify[ciphlen] = '\0';
             
             printf("Texto descifrado:\n\"%s\"\n", verify);
             
@@ -259,9 +301,9 @@ void run_tests() {
     printf("\n\n");
     printf("╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
     printf("║                                   RESUMEN DE PRUEBAS                                                 ║\n");
-    printf("╠═══════════╦══════════════════════╦═══════════════╦══════════════════╦═════════════════════════════════╣\n");
-    printf("║   Tipo    ║       Clave          ║ Tiempo (seg)  ║ Claves/segundo   ║  Estado                         ║\n");
-    printf("╠═══════════╬══════════════════════╬═══════════════╬══════════════════╬═════════════════════════════════╣\n");
+    printf("╠═══════════╦══════════════════════╦═══════════════╦══════════════════╦════════════════════════════════╣\n");
+    printf("║   Tipo    ║       Clave          ║ Tiempo (seg)  ║ Claves/segundo   ║  Estado                        ║\n");
+    printf("╠═══════════╬══════════════════════╬═══════════════╬══════════════════╬════════════════════════════════╣\n");
     
     for (int i = 0; i < num_tests; i++) {
         BruteForceResult result = allResults[i];
@@ -281,23 +323,71 @@ void run_tests() {
                status);
     }
     
-    printf("╚═══════════╩══════════════════════╩═══════════════╩══════════════════╩═════════════════════════════════╝\n");
+    printf("╚═══════════╩══════════════════════╩═══════════════╩══════════════════╩════════════════════════════════╝\n");
     printf("\nNota: Timeout configurado en %.0f segundos (%.2f minutos) por prueba\n", 
            timeout_seconds, timeout_seconds / 60.0);
-    
-    free(plaintext);
-    free(ciphertext);
 }
 
 // Función principal
-int main() {
+int main(int argc, char *argv[]) {
+    // Parámetros configurables
+    long known_key = 123456L;
+    char search_word[256] = "";
+    char input_file[256] = "input.txt";
+    int run_tests_flag = 0;
+
+    // Lectura de parámetros
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-t") == 0) {run_tests_flag = 1;}
+
+        if (strcmp(argv[i], "-k") == 0 && i + 1 < argc) { // Llave de cifrado
+            known_key = atol(argv[++i]);
+            if (known_key <= 0) { // Validación de clave válida
+                fprintf(stderr, "Error: La clave debe ser un número positivo\n");
+                break;
+            }
+        } else if (strcmp(argv[i], "-s") == 0 && i + 1 < argc) { // Palabras clave a buscar en descifrado
+            strncpy(search_word, argv[++i], sizeof(search_word) - 1);
+            if (strlen(search_word) == 0) { // Validación de que exita la palabra
+                fprintf(stderr, "Error: La palabra de búsqueda no puede estar vacía\n");
+                break;
+            }
+        } else if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) { // Archivo con texto a cifrar (opcional)
+            strncpy(input_file, argv[++i], sizeof(input_file) - 1);
+        }
+    }
+
+    // Lectura de archivo con texto a cifrar
+    FILE *f = fopen(input_file, "rb");
+    if (!f) {
+        fprintf(stderr, "Error: no se pudo abrir %s\n", input_file);
+        return 1;
+    }
+
+    unsigned char *buffer = malloc(MAX_TEXT); // Texto largo (se ajustará a múltiplo de 8)
+    if (!buffer) { perror("malloc"); return 1; }
+
+    int ciphlen = fread(buffer, 1, MAX_TEXT, f);
+    fclose(f);
+
+    // Ajustar texto a múltiplo de 8 bytes
+    if (ciphlen % 8 != 0){
+        int pad = 8 - (ciphlen % 8);
+        memset(buffer + ciphlen, 0, pad); // inicializar bytes de padding
+        ciphlen += pad;
+    }
+
     // Inicializar generador de números aleatorios
     srand(time(NULL));
-    
     printf("\n");
-    
-    // Ejecutar pruebas
-    run_tests();
-    
+
+    if (run_tests_flag == 1) {
+        run_tests(buffer, ciphlen, search_word);
+        free(buffer);
+        return 0;
+    }
+
+    run_normal_execution(buffer, ciphlen, search_word, known_key);
+    free(buffer);
     return 0;
 }

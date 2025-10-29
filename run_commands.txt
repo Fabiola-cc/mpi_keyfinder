@@ -1,24 +1,28 @@
 sudo apt update
+sudo apt-get install libssl-dev
+sudo apt-get install libssl-dev openmpi-bin libopenmpi-dev
 
 // Naive 
 --> secuencial (sec_bruteforce)
-sudo apt-get install libssl-dev
 gcc -o sec_bruteforce secuencial_bruteforce.c -lssl -lcrypto -lm
-./sec_bruteforce
+
+Ejecución 'normal'
+./sec_bruteforce -k 123456L -s "una prueba de" -f input.txt
+
+Pruebas
+./sec_bruteforce -t -s "una prueba de" -f input.txt
 
 --> paralelo (bruteforce)
-sudo apt-get install libssl-dev openmpi-bin libopenmpi-dev
 mpicc -o bruteforce bruteforce.c -lssl -lcrypto
 
-// Cypher
+Cifrado directo
 mpirun -np 1 ./bruteforce -e "Hello the world" -k 123456
 
-// Decypher
-mpirun -np 1 ./bruteforce -d "6a513c2a69a9513447566d10c6a70e10" -k 123456
+Decifrado directo
+mpirun -np 1 ./bruteforce -d "141535b9b58bcd088c0fe7332b59d4fc" -k 123456
 
-// bruteforce
-mpirun -np 4 ./bruteforce -b "6a513c2a69a9513447566d10c6a70e10"
-// El 4 es la cantidad de procesos a utilizar
+Bruteforce - usa el archivo de texto
+mpirun -np 4 ./bruteforce -b -k 123456 -s "una prueba de" -f input.txt -m 2000000
 
 
 // Alternativa 1
