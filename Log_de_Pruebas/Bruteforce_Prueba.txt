@@ -1,0 +1,248 @@
+SIMPLE 
+
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ mpirun -np 1 ./bruteforce -e "Esta es una prueba de proyecto 2" -k 36028797018963969
+Mensaje encriptado (hex): 7a421d1fed8fa2fea5c5a7ca2a268d2861858a9461cf3f57dd71b7b733d55000d35e4f2a81845d4e5c4207e85cd7fa8c6d3ef1f10427540a04605115c5a6252bf3051a8b745707db
+Key usada: 36028797018963969
+
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ mpirun -np 4 ./bruteforce -b "7a421d1fed8fa2fea5c5a7ca2a268d2861858a9461cf3f57dd71b7b733d55000d35e4f2a81845d4e5c4207e85cd7fa8c6d3ef1f10427540a04605115c5a6252bf3051a8b745707db" -m 72057594037927936
+╔════════════════════════════════════════════════════════════════╗
+║          BÚSQUEDA DE CLAVE POR FUERZA BRUTA - NAIVE           ║
+╚════════════════════════════════════════════════════════════════╝
+Rango de búsqueda: 0 a 72057594037927936
+Número de procesos: 4
+Timeout: 60 segundos
+Palabra clave a buscar: " es una prueba de "
+
+Iniciando búsqueda...
+
+[Rank 3] Clave actual: 399999 | Progreso: 0.00% | Velocidad: 3645890 claves/seg | Tiempo: 0.11s
+[Rank 2] Clave actual: 399998 | Progreso: 0.00% | Velocidad: 3575049 claves/seg | Tiempo: 0.11s
+[Rank 1] Clave actual: 399997 | Progreso: 0.00% | Velocidad: 3491286 claves/seg | Tiempo: 0.11s
+[Rank 0] Clave actual: 399996 | Progreso: 0.00% | Velocidad: 3343202 claves/seg | Tiempo: 0.12s
+[Rank 3] Clave actual: 799999 | Progreso: 0.00% | Velocidad: 3492360 claves/seg | Tiempo: 0.23s
+[Rank 1] Clave actual: 799997 | Progreso: 0.00% | Velocidad: 3398210 claves/seg | Tiempo: 0.24s
+[Rank 2] Clave actual: 799998 | Progreso: 0.00% | Velocidad: 3344403 claves/seg | Tiempo: 0.24s
+[Rank 0] Clave actual: 799996 | Progreso: 0.00% | Velocidad: 3283833 claves/seg | Tiempo: 0.24s
+[Rank 3] Clave actual: 1199999 | Progreso: 0.00% | Velocidad: 3264117 claves/seg | Tiempo: 0.37s
+[Rank 1] Clave actual: 1199997 | Progreso: 0.00% | Velocidad: 3112502 claves/seg | Tiempo: 0.39s
+[Rank 0] Clave actual: 1199996 | Progreso: 0.00% | Velocidad: 3083390 claves/seg | Tiempo: 0.39s
+[Rank 2] Clave actual: 1199998 | Progreso: 0.00% | Velocidad: 3039246 claves/seg | Tiempo: 0.39s
+[Rank 3] Clave actual: 1599999 | Progreso: 0.00% | Velocidad: 3227155 claves/seg | Tiempo: 0.50s
+[Rank 0] Clave actual: 1599996 | Progreso: 0.00% | Velocidad: 3146511 claves/seg | Tiempo: 0.51s
+[Rank 2] Clave actual: 1599998 | Progreso: 0.00% | Velocidad: 3107339 claves/seg | Tiempo: 0.51s
+[Rank 1] Clave actual: 1599997 | Progreso: 0.00% | Velocidad: 3104747 claves/seg | Tiempo: 0.52s
+[Rank 3] Clave actual: 1999999 | Progreso: 0.00% | Velocidad: 3298594 claves/seg | Tiempo: 0.61s
+[Rank 0] Clave actual: 1999996 | Progreso: 0.00% | Velocidad: 3233888 claves/seg | Tiempo: 0.62s
+[Rank 1] Clave actual: 1999997 | Progreso: 0.00% | Velocidad: 3209653 claves/seg | Tiempo: 0.62s
+[Rank 2] Clave actual: 1999998 | Progreso: 0.00% | Velocidad: 3117314 claves/seg | Tiempo: 0.64s
+[Rank 3] Clave actual: 2399999 | Progreso: 0.00% | Velocidad: 3345474 claves/seg | Tiempo: 0.72s
+[Rank 0] Clave actual: 2399996 | Progreso: 0.00% | Velocidad: 3291929 claves/seg | Tiempo: 0.73s
+[Rank 1] Clave actual: 22799997 | Progreso: 0.00% | Velocidad: 3378577 claves/seg | Tiempo: 6.75s
+[Rank 2] Clave actual: 146799998 | Progreso: 0.00% | Velocidad: 3315212 claves/seg | Tiempo: 44.28s
+[Rank 0] Clave actual: 199599996 | Progreso: 0.00% | Velocidad: 3330297 claves/seg | Tiempo: 59.93s
+[Rank 1] Clave actual: 199599997 | Progreso: 0.00% | Velocidad: 3329424 claves/seg | Tiempo: 59.95s
+[Rank 3] Clave actual: 197999999 | Progreso: 0.00% | Velocidad: 3301506 claves/seg | Tiempo: 59.97s
+
+⏱️  TIMEOUT alcanzado (60 segundos)
+
+╔════════════════════════════════════════════════════════════════╗
+║                         RESULTADOS                             ║
+╚════════════════════════════════════════════════════════════════╝
+✗ Tiempo agotado - No se encontró la clave en 60 segundos
+
+Estadísticas:
+  Total de claves probadas: 199203338
+  Tiempo total: 60.00 segundos
+  Velocidad promedio: 3320052 claves/segundo
+  Porcentaje explorado: 0.0000%
+╚════════════════════════════════════════════════════════════════╝
+
+
+
+MEDIO
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ mpirun -np 1 ./bruteforce -e "Esta es una prueba de proyecto 2" -k 36028797018963969
+Mensaje encriptado (hex): 7a421d1fed8fa2fea5c5a7ca2a268d2861858a9461cf3f57dd71b7b733d55000d35e4f2a81845d4e5c4207e85cd7fa8c6d3ef1f10427540a04605115c5a6252bf3051a8b745707db
+Key usada: 36028797018963969
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ mpirun -np 1 ./bruteforce -e "Esta es una prueba de proyecto 2" -k 45035996273704960
+Mensaje encriptado (hex): 6a77ef92993e068bfb9970df524a2746e66f4387bcc7d899a756088cb6bd3ae06f18de31e831d9e42606eb322294eb3efca89b373a467cfb49b9b2e816872d0e97efb72e8a1c6517
+Key usada: 45035996273704960
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ mpirun -np 4 ./bruteforce -b "6a77ef92993e068bfb9970df524a2746e66f4387bcc7d899a756088cb6bd3ae06f18de31e831d9e42606eb322294eb3efca89b373a467cfb49b9b2e816872d0e97efb72e8a1c6517" -m 72057594037927936
+╔════════════════════════════════════════════════════════════════╗
+║          BÚSQUEDA DE CLAVE POR FUERZA BRUTA - NAIVE           ║
+╚════════════════════════════════════════════════════════════════╝
+Rango de búsqueda: 0 a 72057594037927936
+Número de procesos: 4
+Timeout: 60 segundos
+Palabra clave a buscar: " es una prueba de "
+
+Iniciando búsqueda...
+
+[Rank 3] Clave actual: 399999 | Progreso: 0.00% | Velocidad: 3618230 claves/seg | Tiempo: 0.11s
+[Rank 1] Clave actual: 399997 | Progreso: 0.00% | Velocidad: 3466301 claves/seg | Tiempo: 0.12s
+[Rank 0] Clave actual: 399996 | Progreso: 0.00% | Velocidad: 3403517 claves/seg | Tiempo: 0.12s
+[Rank 2] Clave actual: 399998 | Progreso: 0.00% | Velocidad: 3249045 claves/seg | Tiempo: 0.12s
+[Rank 3] Clave actual: 799999 | Progreso: 0.00% | Velocidad: 3543362 claves/seg | Tiempo: 0.23s
+[Rank 2] Clave actual: 799998 | Progreso: 0.00% | Velocidad: 3334827 claves/seg | Tiempo: 0.24s
+[Rank 1] Clave actual: 799997 | Progreso: 0.00% | Velocidad: 3324907 claves/seg | Tiempo: 0.24s
+[Rank 0] Clave actual: 799996 | Progreso: 0.00% | Velocidad: 3306826 claves/seg | Tiempo: 0.24s
+[Rank 3] Clave actual: 1199999 | Progreso: 0.00% | Velocidad: 3524120 claves/seg | Tiempo: 0.34s
+[Rank 1] Clave actual: 1199997 | Progreso: 0.00% | Velocidad: 3440811 claves/seg | Tiempo: 0.35s
+[Rank 0] Clave actual: 1199996 | Progreso: 0.00% | Velocidad: 3299093 claves/seg | Tiempo: 0.36s
+[Rank 2] Clave actual: 1199998 | Progreso: 0.00% | Velocidad: 3252587 claves/seg | Tiempo: 0.37s
+[Rank 3] Clave actual: 1599999 | Progreso: 0.00% | Velocidad: 3479628 claves/seg | Tiempo: 0.46s
+[Rank 1] Clave actual: 1599997 | Progreso: 0.00% | Velocidad: 3443403 claves/seg | Tiempo: 0.46s
+[Rank 0] Clave actual: 1599996 | Progreso: 0.00% | Velocidad: 3349168 claves/seg | Tiempo: 0.48s
+[Rank 2] Clave actual: 1599998 | Progreso: 0.00% | Velocidad: 3307516 claves/seg | Tiempo: 0.48s
+[Rank 3] Clave actual: 1999999 | Progreso: 0.00% | Velocidad: 3499241 claves/seg | Tiempo: 0.57s
+[Rank 0] Clave actual: 1999996 | Progreso: 0.00% | Velocidad: 3419114 claves/seg | Tiempo: 0.58s
+[Rank 1] Clave actual: 1999997 | Progreso: 0.00% | Velocidad: 3406219 claves/seg | Tiempo: 0.59s
+[Rank 2] Clave actual: 1999998 | Progreso: 0.00% | Velocidad: 3306421 claves/seg | Tiempo: 0.60s
+[Rank 3] Clave actual: 2399999 | Progreso: 0.00% | Velocidad: 3486159 claves/seg | Tiempo: 0.69s
+[Rank 2] Clave actual: 201999998 | Progreso: 0.00% | Velocidad: 3389568 claves/seg | Tiempo: 59.59s
+[Rank 0] Clave actual: 201599996 | Progreso: 0.00% | Velocidad: 3382588 claves/seg | Tiempo: 59.60s
+[Rank 1] Clave actual: 201599997 | Progreso: 0.00% | Velocidad: 3380059 claves/seg | Tiempo: 59.64s
+[Rank 3] Clave actual: 203599999 | Progreso: 0.00% | Velocidad: 3412660 claves/seg | Tiempo: 59.66s
+[Rank 2] Clave actual: 202399998 | Progreso: 0.00% | Velocidad: 3389449 claves/seg | Tiempo: 59.71s
+[Rank 0] Clave actual: 201999996 | Progreso: 0.00% | Velocidad: 3382064 claves/seg | Tiempo: 59.73s
+[Rank 1] Clave actual: 201999997 | Progreso: 0.00% | Velocidad: 3380802 claves/seg | Tiempo: 59.75s
+[Rank 3] Clave actual: 203999999 | Progreso: 0.00% | Velocidad: 3413638 claves/seg | Tiempo: 59.76s
+[Rank 2] Clave actual: 202799998 | Progreso: 0.00% | Velocidad: 3390170 claves/seg | Tiempo: 59.82s
+[Rank 0] Clave actual: 202399996 | Progreso: 0.00% | Velocidad: 3381748 claves/seg | Tiempo: 59.85s
+[Rank 3] Clave actual: 204399999 | Progreso: 0.00% | Velocidad: 3414035 claves/seg | Tiempo: 59.87s
+[Rank 1] Clave actual: 202399997 | Progreso: 0.00% | Velocidad: 3380207 claves/seg | Tiempo: 59.88s
+[Rank 2] Clave actual: 203199998 | Progreso: 0.00% | Velocidad: 3390512 claves/seg | Tiempo: 59.93s
+[Rank 0] Clave actual: 202799996 | Progreso: 0.00% | Velocidad: 3382308 claves/seg | Tiempo: 59.96s
+[Rank 3] Clave actual: 204799999 | Progreso: 0.00% | Velocidad: 3413967 claves/seg | Tiempo: 59.99s
+
+⏱️  TIMEOUT alcanzado (60 segundos)
+
+╔════════════════════════════════════════════════════════════════╗
+║                         RESULTADOS                             ║
+╚════════════════════════════════════════════════════════════════╝
+✗ Tiempo agotado - No se encontró la clave en 60 segundos
+
+Estadísticas:
+  Total de claves probadas: 203504299
+  Tiempo total: 60.00 segundos
+  Velocidad promedio: 3391736 claves/segundo
+  Porcentaje explorado: 0.0000%
+╚════════════════════════════════════════════════════════════════╝
+
+
+DIFICIL 
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ mpirun -np 1 ./bruteforce -e "Esta es una prueba de proyecto 2" -k 15836833854489657
+Mensaje encriptado (hex): c269cad7919ad7b0844dedd14a0fa6c9bb40ce39038d03612fa4091dc7f2d22943b649927fd7dd30217454e43b689c1b24617cc63c6ee879a41b1b229f8d03562ef18cbd8ae1aa00
+Key usada: 15836833854489657
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ mpirun -np 4 ./bruteforce -b "c269cad7919ad7b0844dedd14a0fa6c9bb40ce39038d03612fa4091dc7f2d22943b649927fd7dd30217454e43b689c1b24617cc63c6ee879a41b1b229f8d03562ef18cbd8ae1aa00" -m 72057594037927936
+╔════════════════════════════════════════════════════════════════╗
+║          BÚSQUEDA DE CLAVE POR FUERZA BRUTA - NAIVE           ║
+╚════════════════════════════════════════════════════════════════╝
+Rango de búsqueda: 0 a 72057594037927936
+Número de procesos: 4
+Timeout: 60 segundos
+Palabra clave a buscar: " es una prueba de "
+
+Iniciando búsqueda...
+
+[Rank 0] Clave actual: 399996 | Progreso: 0.00% | Velocidad: 3635666 claves/seg | Tiempo: 0.11s
+[Rank 2] Clave actual: 399998 | Progreso: 0.00% | Velocidad: 3383880 claves/seg | Tiempo: 0.12s
+[Rank 1] Clave actual: 399997 | Progreso: 0.00% | Velocidad: 3373205 claves/seg | Tiempo: 0.12s
+[Rank 3] Clave actual: 399999 | Progreso: 0.00% | Velocidad: 3283016 claves/seg | Tiempo: 0.12s
+[Rank 2] Clave actual: 799998 | Progreso: 0.00% | Velocidad: 3585280 claves/seg | Tiempo: 0.22s
+[Rank 3] Clave actual: 799999 | Progreso: 0.00% | Velocidad: 3554758 claves/seg | Tiempo: 0.23s
+[Rank 0] Clave actual: 799996 | Progreso: 0.00% | Velocidad: 3438190 claves/seg | Tiempo: 0.23s
+[Rank 1] Clave actual: 799997 | Progreso: 0.00% | Velocidad: 3276579 claves/seg | Tiempo: 0.24s
+[Rank 3] Clave actual: 1199999 | Progreso: 0.00% | Velocidad: 3521758 claves/seg | Tiempo: 0.34s
+[Rank 2] Clave actual: 1199998 | Progreso: 0.00% | Velocidad: 3518581 claves/seg | Tiempo: 0.34s
+[Rank 1] Clave actual: 1199997 | Progreso: 0.00% | Velocidad: 3409556 claves/seg | Tiempo: 0.35s
+[Rank 0] Clave actual: 1199996 | Progreso: 0.00% | Velocidad: 3309249 claves/seg | Tiempo: 0.36s
+[Rank 3] Clave actual: 1599999 | Progreso: 0.00% | Velocidad: 3490418 claves/seg | Tiempo: 0.46s
+[Rank 3] Clave actual: 202399999 | Progreso: 0.00% | Velocidad: 3398504 claves/seg | Tiempo: 59.56s
+[Rank 0] Clave actual: 202799996 | Progreso: 0.00% | Velocidad: 3402309 claves/seg | Tiempo: 59.61s
+[Rank 1] Clave actual: 203199997 | Progreso: 0.00% | Velocidad: 3407165 claves/seg | Tiempo: 59.64s
+[Rank 2] Clave actual: 202399998 | Progreso: 0.00% | Velocidad: 3393453 claves/seg | Tiempo: 59.64s
+[Rank 3] Clave actual: 202799999 | Progreso: 0.00% | Velocidad: 3399236 claves/seg | Tiempo: 59.66s
+[Rank 0] Clave actual: 203199996 | Progreso: 0.00% | Velocidad: 3402078 claves/seg | Tiempo: 59.73s
+[Rank 1] Clave actual: 203599997 | Progreso: 0.00% | Velocidad: 3407316 claves/seg | Tiempo: 59.75s
+[Rank 2] Clave actual: 202799998 | Progreso: 0.00% | Velocidad: 3392999 claves/seg | Tiempo: 59.77s
+[Rank 3] Clave actual: 203199999 | Progreso: 0.00% | Velocidad: 3398855 claves/seg | Tiempo: 59.78s
+[Rank 0] Clave actual: 203599996 | Progreso: 0.00% | Velocidad: 3401420 claves/seg | Tiempo: 59.86s
+[Rank 1] Clave actual: 203999997 | Progreso: 0.00% | Velocidad: 3407977 claves/seg | Tiempo: 59.86s
+[Rank 3] Clave actual: 203599999 | Progreso: 0.00% | Velocidad: 3399937 claves/seg | Tiempo: 59.88s
+[Rank 2] Clave actual: 203199998 | Progreso: 0.00% | Velocidad: 3392455 claves/seg | Tiempo: 59.90s
+[Rank 0] Clave actual: 203999996 | Progreso: 0.00% | Velocidad: 3400965 claves/seg | Tiempo: 59.98s
+[Rank 1] Clave actual: 204399997 | Progreso: 0.00% | Velocidad: 3407411 claves/seg | Tiempo: 59.99s
+
+⏱️  TIMEOUT alcanzado (60 segundos)
+
+╔════════════════════════════════════════════════════════════════╗
+║                         RESULTADOS                             ║
+╚════════════════════════════════════════════════════════════════╝
+✗ Tiempo agotado - No se encontró la clave en 60 segundos
+
+Estadísticas:
+  Total de claves probadas: 204002738
+  Tiempo total: 60.00 segundos
+  Velocidad promedio: 3400042 claves/segundo
+  Porcentaje explorado: 0.0000%
+╚════════════════════════════════════════════════════════════════╝
+
+
+EXTRA
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ mpirun -np 1 ./bruteforce -e "Esta es una prueba de proyecto 2" -k 2251799813685248
+Mensaje encriptado (hex): a1a30c2642023b70568dac9f4017224cc43df176d44798da6b10cec6e29e6ddfc986965e48a022e8490f6d4258910404b72ab1e6dd291306d96bc00a0a792f72184c4324dd9f729c
+Key usada: 2251799813685248
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ mpirun -np 4 ./bruteforce -b "a1a30c2642023b70568dac9f4017224cc43df176d447
+98da6b10cec6e29e6ddfc986965e48a022e8490f6d4258910404b72ab1e6dd291306d96bc00a0a792f72184c4324dd9f729c" -m 72057594037927936
+╔════════════════════════════════════════════════════════════════╗
+║          BÚSQUEDA DE CLAVE POR FUERZA BRUTA - NAIVE           ║
+╚════════════════════════════════════════════════════════════════╝
+Rango de búsqueda: 0 a 72057594037927936
+Número de procesos: 4
+Timeout: 60 segundos
+Palabra clave a buscar: " es una prueba de "
+
+Iniciando búsqueda...
+
+[Rank 3] Clave actual: 399999 | Progreso: 0.00% | Velocidad: 3574682 claves/seg | Tiempo: 0.11s
+[Rank 2] Clave actual: 399998 | Progreso: 0.00% | Velocidad: 3401975 claves/seg | Tiempo: 0.12s
+[Rank 0] Clave actual: 399996 | Progreso: 0.00% | Velocidad: 3322611 claves/seg | Tiempo: 0.12s
+[Rank 1] Clave actual: 399997 | Progreso: 0.00% | Velocidad: 3313048 claves/seg | Tiempo: 0.12s
+[Rank 3] Clave actual: 799999 | Progreso: 0.00% | Velocidad: 3670199 claves/seg | Tiempo: 0.22s
+[Rank 2] Clave actual: 799998 | Progreso: 0.00% | Velocidad: 3535400 claves/seg | Tiempo: 0.23s
+[Rank 1] Clave actual: 799997 | Progreso: 0.00% | Velocidad: 3340044 claves/seg | Tiempo: 0.24s
+[Rank 0] Clave actual: 799996 | Progreso: 0.00% | Velocidad: 3308116 claves/seg | Tiempo: 0.24s
+[Rank 3] Clave actual: 1199999 | Progreso: 0.00% | Velocidad: 3579102 claves/seg | Tiempo: 0.34s
+[Rank 2] Clave actual: 1199998 | Progreso: 0.00% | Velocidad: 3448517 claves/seg | Tiempo: 0.35s
+[Rank 1] Clave actual: 1199997 | Progreso: 0.00% | Velocidad: 3438874 claves/seg | Tiempo: 0.35s
+[Rank 0] Clave actual: 1199996 | Progreso: 0.00% | Velocidad: 3298238 claves/seg | Tiempo: 0.36s
+[Rank 3] Clave actual: 1599999 | Progreso: 0.00% | Velocidad: 3579173 claves/seg | Tiempo: 0.45s
+[Rank 2] Clave actual: 1599998 | Progreso: 0.00% | Velocidad: 3567252 claves/seg | Tiempo: 0.45s
+[Rank 1] Clave actual: 1599997 | Progreso: 0.00% | Velocidad: 3409124 claves/seg | Tiempo: 0.47s
+[Rank 0] Clave actual: 1599996 | Progreso: 0.00% | Velocidad: 3395718 claves/seg | Tiempo: 0.47s
+[Rank 3] Clave actual: 205199999 | Progreso: 0.00% | Velocidad: 3438832 claves/seg | Tiempo: 59.67s
+[Rank 2] Clave actual: 205199998 | Progreso: 0.00% | Velocidad: 3438200 claves/seg | Tiempo: 59.68s
+[Rank 0] Clave actual: 205999996 | Progreso: 0.00% | Velocidad: 3450840 claves/seg | Tiempo: 59.70s
+[Rank 1] Clave actual: 205199997 | Progreso: 0.00% | Velocidad: 3434267 claves/seg | Tiempo: 59.75s
+[Rank 3] Clave actual: 205599999 | Progreso: 0.00% | Velocidad: 3438738 claves/seg | Tiempo: 59.79s
+[Rank 2] Clave actual: 205599998 | Progreso: 0.00% | Velocidad: 3437837 claves/seg | Tiempo: 59.81s
+[Rank 0] Clave actual: 206399996 | Progreso: 0.00% | Velocidad: 3451182 claves/seg | Tiempo: 59.81s
+[Rank 1] Clave actual: 205599997 | Progreso: 0.00% | Velocidad: 3434182 claves/seg | Tiempo: 59.87s
+[Rank 3] Clave actual: 205999999 | Progreso: 0.00% | Velocidad: 3438975 claves/seg | Tiempo: 59.90s
+[Rank 0] Clave actual: 206799996 | Progreso: 0.00% | Velocidad: 3451734 claves/seg | Tiempo: 59.91s
+[Rank 2] Clave actual: 205999998 | Progreso: 0.00% | Velocidad: 3438254 claves/seg | Tiempo: 59.91s
+[Rank 1] Clave actual: 205999997 | Progreso: 0.00% | Velocidad: 3434668 claves/seg | Tiempo: 59.98s
+
+⏱️  TIMEOUT alcanzado (60 segundos)
+
+╔════════════════════════════════════════════════════════════════╗
+║                         RESULTADOS                             ║
+╚════════════════════════════════════════════════════════════════╝
+✗ Tiempo agotado - No se encontró la clave en 60 segundos
+
+Estadísticas:
+  Total de claves probadas: 206471326
+  Tiempo total: 60.00 segundos
+  Velocidad promedio: 3441186 claves/segundo
+  Porcentaje explorado: 0.0000%
+╚════════════════════════════════════════════════════════════════╝

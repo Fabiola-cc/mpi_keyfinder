@@ -1,0 +1,271 @@
+mpirun -np 4 ./bf_a2 -k 36028797018963969 -h 36028797018950000 -r 20000 -s "es una prueba de" -f input.txt
+mpirun -np 4 ./bf_a2 -k 45035996273704960 -h 45035996273700000 -r 20000 -s "es una prueba de" -f input.txt
+mpirun -np 4 ./bf_a2 -k 15836833854489657 -h 15836833854480000 -r 20000 -s "es una prueba de" -f input.txt
+mpirun -np 4 ./bf_a2 -k 2251799813685248 -h 2251799813680000 -r 20000 -s "es una prueba de" -f input.txt
+
+
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder/Alternative2$ mpirun -np 4 ./bf_a2 -k 36028797018963969 -h 36028797018950000 -r 20000 -s "es una prueba de" -f input.txt
+=== DES BRUTE FORCE - BÚSQUEDA RADIAL CON PISTA ===
+
+[SIMULACIÓN]
+Clave REAL usada para cifrar: 36028797018963969
+(En un ataque real, esta clave es desconocida)
+
+[PARÁMETROS DE BÚSQUEDA]
+Pista proporcionada: 36028797018950000
+Distancia de la pista a la clave real: 13969
+Radio de búsqueda: 20000
+Rango de exploración: [36028797018930000, 36028797018970000]
+✓ La clave ESTÁ dentro del rango de búsqueda
+
+Espacio de búsqueda: ~40000 claves
+Palabra de búsqueda: "es una prueba de"
+Archivo: input.txt (40 bytes)
+Procesos MPI: 4
+
+Distribución de trabajo:
+  Cada proceso explora radios intercalados desde la pista
+  P0: radios 0, 4, 8, ...
+  P1: radios 1, 5, 9, ...
+  ...
+Intervalo de verificación: cada 5000 claves
+
+Iniciando búsqueda radial desde pista...
+Proceso 3: ~10000 claves a explorar
+Proceso 0: ~10000 claves a explorar
+Proceso 1: ~10000 claves a explorar
+Proceso 2: ~10000 claves a explorar
+
+>>> Proceso 1 ENCONTRÓ LA CLAVE: 36028797018963969 <<<
+    Radio desde pista: 13969
+    Distancia desde pista: 13969
+
+>>> Proceso 0 ENCONTRÓ LA CLAVE: 36028797018963968 <<<
+    Radio desde pista: 13968
+    Distancia desde pista: 13968
+Proceso 3: deteniendo búsqueda (clave encontrada por proceso 1)
+Proceso 2: deteniendo búsqueda (clave encontrada por proceso 1)
+
+=== RESULTADOS ===
+✓ CLAVE ENCONTRADA: 36028797018963969
+Clave real (usada para cifrar): 36028797018963969
+✓ ¡La clave encontrada es CORRECTA!
+
+Estadísticas de búsqueda:
+- Pista inicial: 36028797018950000
+- Distancia pista → clave encontrada: 13969
+- Distancia pista → clave real: 13969
+- Total de claves probadas: 33971
+- Tiempo total: 0.002400 segundos
+- Velocidad promedio: 14151635 claves/segundo
+- Speedup con 4 procesos: 4.00x
+- Eficiencia: 100.0%
+
+Eficiencia de la pista:
+- Radio explorado hasta encontrar: 13969
+- Porcentaje del radio total: 69.84%
+- Reducción de espacio vs búsqueda completa: 30.16%
+
+--- Texto descifrado ---
+Esta es una prueba de proyecto 2
+
+------------------------
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder/Alternative2$ mpirun -np 4 ./bf_a2 -k 45035996273704960 -h 45035996273700000 -r 20000 -s "es una prueba de" -f input.txt
+=== DES BRUTE FORCE - BÚSQUEDA RADIAL CON PISTA ===
+
+[SIMULACIÓN]
+Clave REAL usada para cifrar: 45035996273704960
+(En un ataque real, esta clave es desconocida)
+
+[PARÁMETROS DE BÚSQUEDA]
+Pista proporcionada: 45035996273700000
+Distancia de la pista a la clave real: 4960
+Radio de búsqueda: 20000
+Rango de exploración: [45035996273680000, 45035996273720000]
+✓ La clave ESTÁ dentro del rango de búsqueda
+
+Espacio de búsqueda: ~40000 claves
+Palabra de búsqueda: "es una prueba de"
+Archivo: input.txt (40 bytes)
+Procesos MPI: 4
+
+Distribución de trabajo:
+  Cada proceso explora radios intercalados desde la pista
+  P0: radios 0, 4, 8, ...
+  P1: radios 1, 5, 9, ...
+  ...
+Intervalo de verificación: cada 5000 claves
+
+Iniciando búsqueda radial desde pista...
+Proceso 2: ~10000 claves a explorar
+Proceso 3: ~10000 claves a explorar
+Proceso 0: ~10000 claves a explorar
+Proceso 1: ~10000 claves a explorar
+
+>>> Proceso 0 ENCONTRÓ LA CLAVE: 45035996273704960 <<<
+    Radio desde pista: 4960
+    Distancia desde pista: 4960
+
+>>> Proceso 1 ENCONTRÓ LA CLAVE: 45035996273704961 <<<
+    Radio desde pista: 4961
+    Distancia desde pista: 4961
+Proceso 3: deteniendo búsqueda (clave encontrada por proceso 0)
+Proceso 2: deteniendo búsqueda (clave encontrada por proceso 0)
+
+=== RESULTADOS ===
+✓ CLAVE ENCONTRADA: 45035996273704961
+Clave real (usada para cifrar): 45035996273704960
+✗ ADVERTENCIA: La clave encontrada NO coincide con la real
+
+Estadísticas de búsqueda:
+- Pista inicial: 45035996273700000
+- Distancia pista → clave encontrada: 4961
+- Distancia pista → clave real: 4960
+- Total de claves probadas: 14963
+- Tiempo total: 0.000610 segundos
+- Velocidad promedio: 24533530 claves/segundo
+- Speedup con 4 procesos: 4.00x
+- Eficiencia: 100.0%
+
+Eficiencia de la pista:
+- Radio explorado hasta encontrar: 4961
+- Porcentaje del radio total: 24.80%
+- Reducción de espacio vs búsqueda completa: 75.19%
+
+--- Texto descifrado ---
+Esta es una prueba de proyecto 2
+
+------------------------
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder/Alternative2$ mpirun -np 4 ./bf_a2 -k 15836833854489657 -h 15836833854480000 -r 20000 -s "es una prueba de" -f input.txt
+Proceso 3: ~10000 claves a explorar
+=== DES BRUTE FORCE - BÚSQUEDA RADIAL CON PISTA ===
+
+[SIMULACIÓN]
+Clave REAL usada para cifrar: 15836833854489657
+(En un ataque real, esta clave es desconocida)
+
+[PARÁMETROS DE BÚSQUEDA]
+Pista proporcionada: 15836833854480000
+Distancia de la pista a la clave real: 9657
+Radio de búsqueda: 20000
+Rango de exploración: [15836833854460000, 15836833854500000]
+✓ La clave ESTÁ dentro del rango de búsqueda
+
+Espacio de búsqueda: ~40000 claves
+Palabra de búsqueda: "es una prueba de"
+Archivo: input.txt (40 bytes)
+Procesos MPI: 4
+
+Distribución de trabajo:
+  Cada proceso explora radios intercalados desde la pista
+  P0: radios 0, 4, 8, ...
+  P1: radios 1, 5, 9, ...
+  ...
+Intervalo de verificación: cada 5000 claves
+
+Iniciando búsqueda radial desde pista...
+Proceso 0: ~10000 claves a explorar
+Proceso 1: ~10000 claves a explorar
+Proceso 2: ~10000 claves a explorar
+
+>>> Proceso 1 ENCONTRÓ LA CLAVE: 15836833854489657 <<<
+    Radio desde pista: 9657
+    Distancia desde pista: 9657
+Proceso 2: deteniendo búsqueda (clave encontrada por proceso 1)
+
+>>> Proceso 0 ENCONTRÓ LA CLAVE: 15836833854489656 <<<
+    Radio desde pista: 9656
+    Distancia desde pista: 9656
+Proceso 3: deteniendo búsqueda (clave encontrada por proceso 1)
+
+=== RESULTADOS ===
+✓ CLAVE ENCONTRADA: 15836833854489657
+Clave real (usada para cifrar): 15836833854489657
+✓ ¡La clave encontrada es CORRECTA!
+
+Estadísticas de búsqueda:
+- Pista inicial: 15836833854480000
+- Distancia pista → clave encontrada: 9657
+- Distancia pista → clave real: 9657
+- Total de claves probadas: 19659
+- Tiempo total: 0.001661 segundos
+- Velocidad promedio: 11834929 claves/segundo
+- Speedup con 4 procesos: 4.00x
+- Eficiencia: 100.0%
+
+Eficiencia de la pista:
+- Radio explorado hasta encontrar: 9657
+- Porcentaje del radio total: 48.28%
+- Reducción de espacio vs búsqueda completa: 51.72%
+
+--- Texto descifrado ---
+Esta es una prueba de proyecto 2
+
+------------------------
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder/Alternative2$ mpirun -np 4 ./bf_a2 -k 2251799813685248 -h 2251799813680000 -r 20000 -s "es una prueba de" -f input.txt
+=== DES BRUTE FORCE - BÚSQUEDA RADIAL CON PISTA ===
+
+[SIMULACIÓN]
+Clave REAL usada para cifrar: 2251799813685248
+(En un ataque real, esta clave es desconocida)
+
+[PARÁMETROS DE BÚSQUEDA]
+Pista proporcionada: 2251799813680000
+Distancia de la pista a la clave real: 5248
+Radio de búsqueda: 20000
+Rango de exploración: [2251799813660000, 2251799813700000]
+✓ La clave ESTÁ dentro del rango de búsqueda
+
+Espacio de búsqueda: ~40000 claves
+Palabra de búsqueda: "es una prueba de"
+Archivo: input.txt (40 bytes)
+Procesos MPI: 4
+
+Distribución de trabajo:
+  Cada proceso explora radios intercalados desde la pista
+  P0: radios 0, 4, 8, ...
+  P1: radios 1, 5, 9, ...
+  ...
+Intervalo de verificación: cada 5000 claves
+
+Iniciando búsqueda radial desde pista...
+Proceso 0: ~10000 claves a explorar
+Proceso 1: ~10000 claves a explorar
+Proceso 2: ~10000 claves a explorar
+Proceso 3: ~10000 claves a explorar
+
+>>> Proceso 0 ENCONTRÓ LA CLAVE: 2251799813685248 <<<
+    Radio desde pista: 5248
+    Distancia desde pista: 5248
+
+>>> Proceso 1 ENCONTRÓ LA CLAVE: 2251799813685249 <<<
+    Radio desde pista: 5249
+    Distancia desde pista: 5249
+Proceso 3: deteniendo búsqueda (clave encontrada por proceso 0)
+
+=== RESULTADOS ===
+✓ CLAVE ENCONTRADA: 2251799813685249
+Clave real (usada para cifrar): 2251799813685248
+✗ ADVERTENCIA: La clave encontrada NO coincide con la real
+
+Estadísticas de búsqueda:
+- Pista inicial: 2251799813680000
+- Distancia pista → clave encontrada: 5249
+- Distancia pista → clave real: 5248
+- Total de claves probadas: 15251
+- Tiempo total: 0.000649 segundos
+- Velocidad promedio: 23495609 claves/segundo
+- Speedup con 4 procesos: 4.00x
+- Eficiencia: 100.0%
+
+Eficiencia de la pista:
+- Radio explorado hasta encontrar: 5249
+- Porcentaje del radio total: 26.25%
+- Reducción de espacio vs búsqueda completa: 73.75%
+
+--- Texto descifrado ---
+Esta es una prueba de proyecto 2
+
+------------------------
+Proceso 2: deteniendo búsqueda (clave encontrada por proceso 0)
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder/Alternative2$ 

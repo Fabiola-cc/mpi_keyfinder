@@ -1,0 +1,137 @@
+mangovx@LAPTOP-JLACBOSI:~/8.Labs_Paralela/mpi_keyfinder$ ./sec_bruteforce_mod 
+
+╔═══════════════════════════════════════════════════════════════╗
+║  ATAQUE DE FUERZA BRUTA SECUENCIAL AL ALGORITMO DES          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+TEXTO A CIFRAR:
+"Esta es una prueba de proyecto 2"
+
+Longitud original: 32 bytes
+Longitud con padding: 32 bytes (4 bloques DES)
+Palabra clave a buscar: "es una prueba de"
+TIMEOUT: 60 segundos (1.00 minutos) por prueba
+
+EJECUTANDO PRUEBAS...
+===========================================
+
+╔════════════════════════════════════════════════════════════╗
+║ Prueba 1: Clave Extra
+╚════════════════════════════════════════════════════════════╝
+Clave original: 0x0008000000000000 (decimal: 2251799813685248)
+Texto cifrado (primeros 32 bytes): 2D6A4EEAC1161743305263D24C9F5C5CCE48DFA2DE1DB248D86BC71526D7393E
+
+Iniciando búsqueda de fuerza bruta
+Palabra clave a buscar: "es una prueba de"
+Espacio de búsqueda: hasta 2251799813685249 claves
+Timeout configurado: 60 segundos (1.00 minutos)
+Progreso: 1000000 claves probadas (0.0000%) - 0.45 seg - 2239278 claves/seg
+Progreso: 2000000 claves probadas (0.0000%) - 0.88 seg - 2267675 claves/seg
+Progreso: 3000000 claves probadas (0.0000%) - 1.32 seg - 2267844 claves/seg
+Progreso: 4000000 claves probadas (0.0000%) - 1.76 seg - 2271822 claves/seg
+Progreso: 5000000 claves probadas (0.0000%) - 2.20 seg - 2271537 claves/seg
+Progreso: 128000000 claves probadas (0.0000%) - 58.04 seg - 2205304 claves/seg
+Progreso: 129000000 claves probadas (0.0000%) - 58.50 seg - 2205036 claves/seg
+Progreso: 130000000 claves probadas (0.0000%) - 59.00 seg - 2203395 claves/seg
+Progreso: 131000000 claves probadas (0.0000%) - 59.64 seg - 2196641 claves/seg
+
+TIMEOUT alcanzado (60.04 segundos)
+Claves probadas: 131800001 de 2251799813685249 (0.0000%)
+
+--- RESULTADOS ---
+✗ Clave no encontrada (timeout o rango agotado)
+Intentos realizados: 131800001
+Tiempo transcurrido: 60.038184 segundos (1.00 minutos)
+Velocidad: 2195269.61 claves/segundo
+
+
+╔════════════════════════════════════════════════════════════╗
+║ Prueba 2: Clave Fácil
+╚════════════════════════════════════════════════════════════╝
+Clave original: 0x0080000000000001 (decimal: 36028797018963969)
+Texto cifrado (primeros 32 bytes): 3ED74436574DAD908FB161A4487B0DFAACB210ADEA5F347E1B71E319D000C1E1
+
+Iniciando búsqueda de fuerza bruta
+Palabra clave a buscar: "es una prueba de"
+Espacio de búsqueda: hasta 36028797018963970 claves
+Timeout configurado: 60 segundos (1.00 minutos)
+Progreso: 1000000 claves probadas (0.0000%) - 0.47 seg - 2144462 claves/seg
+Progreso: 2000000 claves probadas (0.0000%) - 0.91 seg - 2193289 claves/seg
+Progreso: 3000000 claves probadas (0.0000%) - 1.37 seg - 2193506 claves/seg
+Progreso: 4000000 claves probadas (0.0000%) - 1.81 seg - 2204116 claves/seg
+Progreso: 5000000 claves probadas (0.0000%) - 2.25 seg - 2217421 claves/seg
+Progreso: 6000000 claves probadas (0.0000%) - 2.70 seg - 2223381 claves/seg
+Progreso: 124000000 claves probadas (0.0000%) - 57.74 seg - 2147602 claves/seg
+Progreso: 125000000 claves probadas (0.0000%) - 58.18 seg - 2148565 claves/seg
+Progreso: 126000000 claves probadas (0.0000%) - 58.63 seg - 2149225 claves/seg
+Progreso: 127000000 claves probadas (0.0000%) - 59.07 seg - 2150048 claves/seg
+Progreso: 128000000 claves probadas (0.0000%) - 59.52 seg - 2150523 claves/seg
+Progreso: 129000000 claves probadas (0.0000%) - 59.96 seg - 2151312 claves/seg
+
+TIMEOUT alcanzado (60.01 segundos)
+Claves probadas: 129100001 de 36028797018963970 (0.0000%)
+
+--- RESULTADOS ---
+✗ Clave no encontrada (timeout o rango agotado)
+Intentos realizados: 129100001
+Tiempo transcurrido: 60.008387 segundos (1.00 minutos)
+Velocidad: 2151365.96 claves/segundo
+
+
+╔════════════════════════════════════════════════════════════╗
+║ Prueba 3: Clave Media
+╚════════════════════════════════════════════════════════════╝
+Clave original: 0x00A0000000000000 (decimal: 45035996273704960)
+Texto cifrado (primeros 32 bytes): 828BD0D5C4ACB08BCFB755B83E01E8C2A3EA1E1FF0D48888666B50EEA9AA5477
+
+Iniciando búsqueda de fuerza bruta
+Palabra clave a buscar: "es una prueba de"
+Espacio de búsqueda: hasta 45035996273704961 claves
+Timeout configurado: 60 segundos (1.00 minutos)
+Progreso: 1000000 claves probadas (0.0000%) - 0.44 seg - 2278104 claves/seg
+Progreso: 2000000 claves probadas (0.0000%) - 0.88 seg - 2280105 claves/seg
+Progreso: 3000000 claves probadas (0.0000%) - 1.32 seg - 2269982 claves/seg
+Progreso: 4000000 claves probadas (0.0000%) - 1.79 seg - 2238100 claves/seg
+Progreso: 131000000 claves probadas (0.0000%) - 58.35 seg - 2245245 claves/seg
+Progreso: 132000000 claves probadas (0.0000%) - 58.78 seg - 2245783 claves/seg
+Progreso: 133000000 claves probadas (0.0000%) - 59.22 seg - 2245958 claves/seg
+Progreso: 134000000 claves probadas (0.0000%) - 59.66 seg - 2246052 claves/seg
+
+TIMEOUT alcanzado (60.01 segundos)
+Claves probadas: 134800001 de 45035996273704961 (0.0000%)
+
+--- RESULTADOS ---
+✗ Clave no encontrada (timeout o rango agotado)
+Intentos realizados: 134800001
+Tiempo transcurrido: 60.005929 segundos (1.00 minutos)
+Velocidad: 2246444.70 claves/segundo
+
+
+╔════════════════════════════════════════════════════════════╗
+║ Prueba 4: Clave Difícil
+╚════════════════════════════════════════════════════════════╝
+Clave original: 0x0038438438438439 (decimal: 15836833854489657)
+Texto cifrado (primeros 32 bytes): DB99D0FC0AFC063B37DD94396588A7FCD4DA1559F1365225A5993409EA818AB3
+
+Iniciando búsqueda de fuerza bruta
+Palabra clave a buscar: "es una prueba de"
+Espacio de búsqueda: hasta 15836833854489658 claves
+Timeout configurado: 60 segundos (1.00 minutos)
+Progreso: 1000000 claves probadas (0.0000%) - 0.44 seg - 2293470 claves/seg
+Progreso: 2000000 claves probadas (0.0000%) - 0.88 seg - 2285454 claves/seg
+Progreso: 3000000 claves probadas (0.0000%) - 1.32 seg - 2274767 claves/seg
+Progreso: 4000000 claves probadas (0.0000%) - 1.77 seg - 2261308 claves/seg
+Progreso: 5000000 claves probadas (0.0000%) - 2.21 seg - 2258695 claves/seg
+Progreso: 130000000 claves probadas (0.0000%) - 58.41 seg - 2225824 claves/seg
+Progreso: 131000000 claves probadas (0.0000%) - 58.85 seg - 2225992 claves/seg
+Progreso: 132000000 claves probadas (0.0000%) - 59.29 seg - 2226276 claves/seg
+Progreso: 133000000 claves probadas (0.0000%) - 59.73 seg - 2226553 claves/seg
+
+TIMEOUT alcanzado (60.01 segundos)
+Claves probadas: 133600001 de 15836833854489658 (0.0000%)
+
+--- RESULTADOS ---
+✗ Clave no encontrada (timeout o rango agotado)
+Intentos realizados: 133600001
+Tiempo transcurrido: 60.008549 segundos (1.00 minutos)
+Velocidad: 2226349.47 claves/segundo
