@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        if (strlen(search_word) == 0) {
+        if (strlen(search_word) == 0) {// Validar presencia de parámetro
             fprintf(stderr, "Error: Debe proporcionar palabra de búsqueda con -s\n\n");
             MPI_Abort(comm, 1);
         }
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
     MPI_Bcast(&ciphlen, 1, MPI_INT, 0, comm);
     MPI_Bcast(buffer, ciphlen, MPI_UNSIGNED_CHAR, 0, comm);
 
-    // Calcular rango centrado en la clave (para claves grandes)
+    // Asignar rango de búsqueda a cada proceso
     uint64_t upper = 1ULL << 56; // 2^56
     long range_per_node = upper / N;
     long mylower = range_per_node * id;

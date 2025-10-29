@@ -273,8 +273,8 @@ int main(int argc, char *argv[]) {
                     
                     double rate = total_keys_estimate / elapsed;
                     
-                    printf("(%.2f segundos) Proceso 0: %ld claves/seg | En total: ~%.0f claves/seg\n", 
-                        elapsed, rate_process, rate);
+                    printf("(%.2f segundos) Proceso 0: %ld claves/seg | En total: ~%.0f claves/seg | Claves probadas ~%.0ld\n", 
+                        elapsed, rate_process, rate, total_keys_estimate);
                     last_report = key;
                 }
             }
