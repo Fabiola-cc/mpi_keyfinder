@@ -7,6 +7,8 @@
 #include <ctype.h>
 
 #define DEFAULT_MAX_KEY ((1UL<<24) - 1)  // cambiar si quieres buscar más (CUIDADO: puede ser enorme)
+#define TIMEOUT_SECONDS 60.0  // Timeout de 1 minuto
+#define PROGRESS_INTERVAL 100000  // Reportar cada 100k claves
 
 void decrypt(long key, char *ciph, int len){
   long k = 0;
@@ -54,7 +56,7 @@ void encrypt(long key, char *ciph, int len){
   }
 }
 
-char search_str[] = " the ";
+char search_str[] = " es una prueba de ";
 
 int tryKey(long key, const unsigned char *ciph, int len){
   // hacemos copia porque decrypt muta el buffer
@@ -188,7 +190,14 @@ int main(int argc, char *argv[]){
       if(argc >= 5 && strcmp(argv[3], "-m") == 0){
         max_key = strtoul(argv[4], NULL, 10);
       }
-      printf("Rank 0: iniciando bruteforce hasta %lu (cada rank intenta pasos de %d)\n", max_key, N);
+      printf("╔════════════════════════════════════════════════════════════════╗\n");
+      printf("║          BÚSQUEDA DE CLAVE POR FUERZA BRUTA - NAIVE           ║\n");
+      printf("╚════════════════════════════════════════════════════════════════╝\n");
+      printf("Rango de búsqueda: 0 a %lu\n", max_key);
+      printf("Número de procesos: %d\n", N);
+      printf("Timeout: %.0f segundos\n", TIMEOUT_SECONDS);
+      printf("Palabra clave a buscar: \"%s\"\n", search_str);
+      printf("\nIniciando búsqueda...\n\n");
     }
 
     // difundir len y max_key
@@ -197,34 +206,95 @@ int main(int argc, char *argv[]){
     // difundir ciphertext bytes
     MPI_Bcast(cipher, len, MPI_UNSIGNED_CHAR, 0, comm);
 
-    // búsqueda distribuida
+    // Sincronizar todos los procesos antes de empezar
+    MPI_Barrier(comm);
+    
+    // Iniciar cronómetro
+    double start_time = MPI_Wtime();
+    double current_time;
+
+    // búsqueda distribuida con timeout y progreso
     long found_local = -1;
+    unsigned long keys_tested = 0;
+    int timeout_reached = 0;
+
     for(unsigned long key = (unsigned long)id; key <= max_key; key += (unsigned long)N){
+      // Verificar timeout
+      current_time = MPI_Wtime();
+      if((current_time - start_time) > TIMEOUT_SECONDS){
+        timeout_reached = 1;
+        if(id == 0){
+          printf("\n TIMEOUT alcanzado (%0.f segundos)\n", TIMEOUT_SECONDS);
+        }
+        break;
+      }
+
+      // Probar la clave
       if(tryKey((long)key, cipher, len)){
         found_local = (long)key;
         break;
       }
-      // opcional: pequeño checkpoint cada X iteraciones para no saturar
+      
+      keys_tested++;
+
+      // Reportar progreso cada PROGRESS_INTERVAL claves
+      if(keys_tested % PROGRESS_INTERVAL == 0){
+        double elapsed = current_time - start_time;
+        double rate = (keys_tested * N) / elapsed;
+        double progress = ((double)key / max_key) * 100.0;
+        
+        printf("[Rank %d] Clave actual: %lu | Progreso: %.2f%% | Velocidad: %.0f claves/seg | Tiempo: %.2fs\n", 
+               id, key, progress, rate, elapsed);
+      }
     }
 
+    // Obtener tiempo final
+    double end_time = MPI_Wtime();
+    double total_time = end_time - start_time;
+
+    // Recolectar resultados
     long found_global = -1;
     MPI_Allreduce(&found_local, &found_global, 1, MPI_LONG, MPI_MAX, comm);
 
-    if(found_global != -1){
-      if(id == 0){
-        printf("==> Llave encontrada: %ld\n", found_global);
+    // Recolectar total de claves probadas
+    unsigned long total_keys_tested;
+    MPI_Reduce(&keys_tested, &total_keys_tested, 1, MPI_UNSIGNED_LONG, MPI_SUM, 0, comm);
+
+    // Verificar si algún proceso alcanzó timeout
+    int global_timeout;
+    MPI_Allreduce(&timeout_reached, &global_timeout, 1, MPI_INT, MPI_MAX, comm);
+
+    if(id == 0){
+      printf("\n╔════════════════════════════════════════════════════════════════╗\n");
+      printf("║                         RESULTADOS                             ║\n");
+      printf("╚════════════════════════════════════════════════════════════════╝\n");
+      
+      if(found_global != -1){
+        printf("✓ ¡CLAVE ENCONTRADA: %ld!\n\n", found_global);
+        
         // mostrar mensaje desencriptado con la llave encontrada
         char *temp = malloc(len + 1);
         memcpy(temp, cipher, len);
         temp[len] = 0;
         decrypt(found_global, temp, len);
-        printf("Mensaje desencriptado: %s\n", temp);
+        printf("Mensaje desencriptado:\n\"%s\"\n\n", temp);
         free(temp);
+      } else {
+        if(global_timeout){
+          printf("✗ Tiempo agotado - No se encontró la clave en %0.f segundos\n\n", TIMEOUT_SECONDS);
+        } else {
+          printf("✗ No se encontró la clave en el rango 0..%lu\n\n", max_key);
+        }
       }
-    } else {
-      if(id == 0){
-        printf("No se encontró la llave en el rango 0..%lu\n", max_key);
-      }
+
+      printf("Estadísticas:\n");
+      printf("  Total de claves probadas: %lu\n", total_keys_tested);
+      printf("  Tiempo total: %.2f segundos\n", total_time);
+      printf("  Velocidad promedio: %.0f claves/segundo\n", 
+             total_time > 0 ? total_keys_tested / total_time : 0.0);
+      printf("  Porcentaje explorado: %.4f%%\n", 
+             ((double)total_keys_tested / max_key) * 100.0);
+      printf("╚════════════════════════════════════════════════════════════════╝\n");
     }
   }
   else {
