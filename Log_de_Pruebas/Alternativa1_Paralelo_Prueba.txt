@@ -1,0 +1,138 @@
+mpirun -np 4 ./omp_a1 -k 2251799813685248L -s "es una prueba de"
+mpirun -np 4 ./omp_a1 -k 36028797018963969 -s "es una prueba de"
+mpirun -np 4 ./omp_a1 -k 45035996273704960 -s "es una prueba de"
+mpirun -np 4 ./omp_a1 -k 15836833854489657 -s "es una prueba de"
+
+fabi-cc@DESKTOP-8AB34HC:~/mpi_keyfinder/Alternative1$ mpirun -np 4 ./omp_a1 -k 2251799813685248L -s "es una prueba de"
+Proceso 3: rango [54043195528445952, 72057594037927936] - 18014398509481984 claves
+DES BRUTE FORCE MPI
+Clave usada para cifrar: 2251799813685248              
+Palabra de búsqueda: "es una prueba de                 "
+Archivo de entrada: input.txt                          
+Rango de búsqueda total: 72057594037927936
+Iniciando búsqueda...
+
+Proceso 0: rango [0, 18014398509481984] - 18014398509481984 claves
+Proceso 1: rango [18014398509481984, 36028797018963968] - 18014398509481984 claves
+Proceso 2: rango [36028797018963968, 54043195528445952] - 18014398509481984 claves
+
+¡CLAVE ENCONTRADA!
+Proceso 0 (Thread 1) encontró: 2251799813685248
+Proceso 3: clave encontrada por otro proceso
+Proceso 1: clave encontrada por otro proceso
+Proceso 2: clave encontrada por otro proceso
+
+RESULTADOS 
+Clave encontrada: 2251799813685248
+Total de claves probadas: 413547
+Tiempo total: 0.03 segundos
+Velocidad: 15689416 claves/segundo
+Speedup con 4 procesos: 4.00x
+
+Texto descifrado:
+Esta es una prueba del proyecto 2
+fabi-cc@DESKTOP-8AB34HC:~/mpi_keyfinder/Alternative1$ mpirun -np 4 ./omp_a1 -k 36028797018963969 -s "es una prueba de"
+DES BRUTE FORCE MPI
+Clave usada para cifrar: 36028797018963969             
+Palabra de búsqueda: "es una prueba de                 "
+Archivo de entrada: input.txt                          
+Rango de búsqueda total: 72057594037927936
+Iniciando búsqueda...
+
+Proceso 0: rango [0, 18014398509481984] - 18014398509481984 claves
+Proceso 1: rango [18014398509481984, 36028797018963968] - 18014398509481984 claves
+Proceso 2: rango [36028797018963968, 54043195528445952] - 18014398509481984 claves
+Proceso 3: rango [54043195528445952, 72057594037927936] - 18014398509481984 claves
+Proceso 0: clave encontrada por otro proceso
+
+¡CLAVE ENCONTRADA!
+Proceso 2 (Thread 0) encontró: 36028797018963968
+Proceso 3: clave encontrada por otro proceso
+Proceso 1: clave encontrada por otro proceso
+
+RESULTADOS 
+Clave encontrada: 36028797018963968
+Total de claves probadas: 362943
+Tiempo total: 0.04 segundos
+Velocidad: 10257657 claves/segundo
+Speedup con 4 procesos: 4.00x
+
+Texto descifrado:
+Esta es una prueba del proyecto 2
+fabi-cc@DESKTOP-8AB34HC:~/mpi_keyfinder/Alternative1$ mpirun -np 4 ./omp_a1 -k 45035996273704960 -s "es una prueba de"
+DES BRUTE FORCE MPI
+Clave usada para cifrar: 45035996273704960             
+Palabra de búsqueda: "es una prueba de                 "
+Archivo de entrada: input.txt                          
+Rango de búsqueda total: 72057594037927936
+Iniciando búsqueda...
+
+Proceso 0: rango [0, 18014398509481984] - 18014398509481984 claves
+Proceso 1: rango [18014398509481984, 36028797018963968] - 18014398509481984 claves
+Proceso 2: rango [36028797018963968, 54043195528445952] - 18014398509481984 claves
+Proceso 3: rango [54043195528445952, 72057594037927936] - 18014398509481984 claves
+
+¡CLAVE ENCONTRADA!
+Proceso 2 (Thread 4) encontró: 45035996273704960
+Proceso 1: clave encontrada por otro proceso
+Proceso 3: clave encontrada por otro proceso
+Proceso 0: clave encontrada por otro proceso
+
+RESULTADOS 
+Clave encontrada: 45035996273704960
+Total de claves probadas: 398489
+Tiempo total: 0.06 segundos
+Velocidad: 6258655 claves/segundo
+Speedup con 4 procesos: 4.00x
+
+Texto descifrado:
+Esta es una prueba del proyecto 2
+fabi-cc@DESKTOP-8AB34HC:~/mpi_keyfinder/Alternative1$ mpirun -np 4 ./omp_a1 -k 15836833854489657 -s "es una prueba de"
+DES BRUTE FORCE MPI
+Clave usada para cifrar: 15836833854489657             
+Palabra de búsqueda: "es una prueba de                 "
+Archivo de entrada: input.txt                          
+Rango de búsqueda total: 72057594037927936
+Iniciando búsqueda...
+
+Proceso 0: rango [0, 18014398509481984] - 18014398509481984 claves
+Proceso 1: rango [18014398509481984, 36028797018963968] - 18014398509481984 claves
+Proceso 2: rango [36028797018963968, 54043195528445952] - 18014398509481984 claves
+Proceso 3: rango [54043195528445952, 72057594037927936] - 18014398509481984 claves
+(1.20 segundos) Proceso 0: 423953 claves/seg | En total: ~13566506 claves/seg | Claves probadas ~16319968
+(2.43 segundos) Proceso 0: 415202 claves/seg | En total: ~13286480 claves/seg | Claves probadas ~32319968
+(3.51 segundos) Proceso 0: 429630 claves/seg | En total: ~13748161 claves/seg | Claves probadas ~48319968
+(4.78 segundos) Proceso 0: 420606 claves/seg | En total: ~13459392 claves/seg | Claves probadas ~64319968
+(5.96 segundos) Proceso 0: 421130 claves/seg | En total: ~13476168 claves/seg | Claves probadas ~80319968
+(6.99 segundos) Proceso 0: 430828 claves/seg | En total: ~13786516 claves/seg | Claves probadas ~96319968
+(7.94 segundos) Proceso 0: 442201 claves/seg | En total: ~14150460 claves/seg | Claves probadas ~112319968
+(8.94 segundos) Proceso 0: 448556 claves/seg | En total: ~14353818 claves/seg | Claves probadas ~128319968
+(9.94 segundos) Proceso 0: 453791 claves/seg | En total: ~14521335 claves/seg | Claves probadas ~144319968
+(10.94 segundos) Proceso 0: 458061 claves/seg | En total: ~14657971 claves/seg | Claves probadas ~160319968
+^C(11.90 segundos) Proceso 0: 462848 claves/seg | En total: ~14811145 claves/seg | Claves probadas ~176319968
+(12.91 segundos) Proceso 0: 465543 claves/seg | En total: ~14897402 claves/seg | Claves probadas ~192319968
+(14.16 segundos) Proceso 0: 459690 claves/seg | En total: ~14710082 claves/seg | Claves probadas ~208319968
+(15.20 segundos) Proceso 0: 461086 claves/seg | En total: ~14754764 claves/seg | Claves probadas ~224319968
+(16.52 segundos) Proceso 0: 454476 claves/seg | En total: ~14543253 claves/seg | Claves probadas ~240319968
+(17.45 segundos) Proceso 0: 459092 claves/seg | En total: ~14690962 claves/seg | Claves probadas ~256319968
+(18.43 segundos) Proceso 0: 461868 claves/seg | En total: ~14779796 claves/seg | Claves probadas ~272319968
+(19.40 segundos) Proceso 0: 464528 claves/seg | En total: ~14864913 claves/seg | Claves probadas ~288319968
+(20.45 segundos) Proceso 0: 464948 claves/seg | En total: ~14878342 claves/seg | Claves probadas ~304319968
+(21.41 segundos) Proceso 0: 467467 claves/seg | En total: ~14958970 claves/seg | Claves probadas ~320319968
+(22.39 segundos) Proceso 0: 469475 claves/seg | En total: ~15023226 claves/seg | Claves probadas ~336319968
+(23.37 segundos) Proceso 0: 471090 claves/seg | En total: ~15074911 claves/seg | Claves probadas ~352319968
+(24.31 segundos) Proceso 0: 473417 claves/seg | En total: ~15149353 claves/seg | Claves probadas ~368319968
+(25.25 segundos) Proceso 0: 475652 claves/seg | En total: ~15220875 claves/seg | Claves probadas ~384319968
+(26.23 segundos) Proceso 0: 476928 claves/seg | En total: ~15261707 claves/seg | Claves probadas ~400319968
+(27.31 segundos) Proceso 0: 476344 claves/seg | En total: ~15243038 claves/seg | Claves probadas ~416319968
+(28.50 segundos) Proceso 0: 474117 claves/seg | En total: ~15171749 claves/seg | Claves probadas ~432319968
+(29.67 segundos) Proceso 0: 472138 claves/seg | En total: ~15108429 claves/seg | Claves probadas ~448319968
+(30.99 segundos) Proceso 0: 468197 claves/seg | En total: ~14982324 claves/seg | Claves probadas ~464319968
+(32.19 segundos) Proceso 0: 466296 claves/seg | En total: ~14921503 claves/seg | Claves probadas ~480319968
+(33.41 segundos) Proceso 0: 464261 claves/seg | En total: ~14856383 claves/seg | Claves probadas ~496319968
+(34.57 segundos) Proceso 0: 463088 claves/seg | En total: ~14818832 claves/seg | Claves probadas ~512319968
+(35.87 segundos) Proceso 0: 460286 claves/seg | En total: ~14729184 claves/seg | Claves probadas ~528319968
+(37.15 segundos) Proceso 0: 457829 claves/seg | En total: ~14650555 claves/seg | Claves probadas ~544319968
+(38.33 segundos) Proceso 0: 456837 claves/seg | En total: ~14618808 claves/seg | Claves probadas ~560319968
+(39.51 segundos) Proceso 0: 455776 claves/seg | En total: ~14584857 claves/seg | Claves probadas ~576319968
+(40.74 segundos) Proceso 0: 454365 claves/seg | En total: ~14539689 claves/seg | Claves probadas ~592319968
